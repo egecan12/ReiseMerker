@@ -10,7 +10,7 @@ import { LocationListComponent } from './components/location-list/location-list'
   styleUrl: './app.css'
 })
 export class App {
-  title = 'Location Notebook';
+  title = 'Reise Merken';
   showAddLocationModal = false;
 
   openAddLocation(): void {

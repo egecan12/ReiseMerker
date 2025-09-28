@@ -34,7 +34,6 @@
           <span *ngIf="!selectedFiles">Drag & drop photos here or click to select</span>
           <span *ngIf="selectedFiles">{{ selectedFiles.length }} photo(s) selected</span>
         </p>
-        <p class="file-info" *ngIf="selectedFiles">{{ getSelectedFileNames() }}</p>
         <small class="upload-hint">Max 5 photos, 5MB each (JPEG, PNG, GIF, WebP)</small>
       </div>
       
@@ -57,7 +56,6 @@
         [title]="getUploadButtonTitle()">
         <span *ngIf="isUploading">⏳ Uploading...</span>
         <span *ngIf="!isUploading">📤 Upload Photos</span>
-        <small *ngIf="!(location.id || location._id)" style="display: block; color: red;">No location ID</small>
       </button>
       
       <button 
@@ -68,80 +66,6 @@
       </button>
     </div>
 
-    <!-- Existing Photos in Expanded State -->
-    <div class="existing-photos-expanded" *ngIf="hasPhotos()">
-      <h4>📷 Current Photos ({{ location.photos?.length }})</h4>
-      
-      <div class="photos-grid">
-        <div *ngFor="let photo of location.photos; trackBy: trackByPhoto" class="photo-item">
-          <div class="photo-wrapper">
-            <img 
-              [src]="photo.url" 
-              [alt]="photo.originalName || 'Location photo'"
-              class="photo-image"
-              loading="lazy">
-            
-            <div class="photo-overlay">
-              <button 
-                class="btn-icon btn-view"
-                (click)="openPhotoModal(photo)"
-                title="View full size">
-                🔍
-              </button>
-              
-              <button 
-                class="btn-icon btn-delete"
-                (click)="deletePhoto(photo)"
-                title="Delete photo">
-                🗑️
-              </button>
-            </div>
-          </div>
-          
-          <div class="photo-info" *ngIf="photo.originalName">
-            <small>{{ photo.originalName }}</small>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- Existing Photos (always visible when collapsed) -->
-  <div class="photos-section" *ngIf="hasPhotos() && !isExpanded">
-    <h4>📷 Photos ({{ location.photos?.length }})</h4>
-    
-    <div class="photos-grid">
-      <div *ngFor="let photo of location.photos; trackBy: trackByPhoto" class="photo-item">
-        <div class="photo-wrapper">
-          <img 
-            [src]="photo.url" 
-            [alt]="photo.originalName || 'Location photo'"
-            class="photo-image"
-            loading="lazy">
-          
-          <div class="photo-overlay">
-            <button 
-              class="btn-icon btn-view"
-              (click)="openPhotoModal(photo)"
-              title="View full size">
-              🔍
-            </button>
-            
-            <button 
-              class="btn-icon btn-delete"
-              (click)="deletePhoto(photo)"
-              title="Delete photo">
-              🗑️
-            </button>
-          </div>
-        </div>
-        
-        <div class="photo-info" *ngIf="photo.originalName">
-          <small>{{ photo.originalName }}</small>
-        </div>
-      </div>
-    </div>
   </div>
 
 </div>
