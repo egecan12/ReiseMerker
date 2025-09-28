@@ -1,0 +1,104 @@
+<div class="photo-upload">
+  <!-- Message area -->
+  <div *ngIf="uploadMessage" class="message" [ngClass]="messageType" (click)="clearMessage()">
+    {{ uploadMessage }}
+    <span class="close-btn">×</span>
+  </div>
+
+  <!-- Upload Section -->
+  <div class="upload-section">
+    <h4>📸 Add Photos</h4>
+    
+    <!-- Drag & Drop Area -->
+    <div 
+      class="drop-zone"
+      [class.drag-over]="dragOver"
+      (dragover)="onDragOver($event)"
+      (dragleave)="onDragLeave($event)"
+      (drop)="onDrop($event)"
+      (click)="fileInput.click()">
+      
+      <div class="drop-zone-content">
+        <div class="upload-icon">📁</div>
+        <p class="drop-text">
+          <span *ngIf="!selectedFiles">Drag & drop photos here or click to select</span>
+          <span *ngIf="selectedFiles">{{ selectedFiles.length }} photo(s) selected</span>
+        </p>
+        <p class="file-info" *ngIf="selectedFiles">{{ getSelectedFileNames() }}</p>
+        <small class="upload-hint">Max 5 photos, 5MB each (JPEG, PNG, GIF, WebP)</small>
+      </div>
+      
+      <input 
+        #fileInput
+        id="photoInput"
+        type="file" 
+        accept="image/*" 
+        multiple 
+        (change)="onFileSelect($event)"
+        style="display: none;">
+    </div>
+
+    <!-- Upload Actions -->
+    <div class="upload-actions" *ngIf="selectedFiles && selectedFiles.length > 0">
+      <button 
+        class="btn btn-success"
+        (click)="uploadPhotos()"
+        [disabled]="isUploading || !(location.id || location._id)"
+        [title]="getUploadButtonTitle()">
+        <span *ngIf="isUploading">⏳ Uploading...</span>
+        <span *ngIf="!isUploading">📤 Upload Photos</span>
+        <small *ngIf="!(location.id || location._id)" style="display: block; color: red;">No location ID</small>
+      </button>
+      
+      <button 
+        class="btn btn-outline"
+        (click)="clearSelection()"
+        [disabled]="isUploading">
+        🗑️ Clear
+      </button>
+    </div>
+  </div>
+
+  <!-- Existing Photos -->
+  <div class="photos-section" *ngIf="hasPhotos()">
+    <h4>📷 Photos ({{ location.photos?.length }})</h4>
+    
+    <div class="photos-grid">
+      <div *ngFor="let photo of location.photos; trackBy: trackByPhoto" class="photo-item">
+        <div class="photo-wrapper">
+          <img 
+            [src]="photo.url" 
+            [alt]="photo.originalName || 'Location photo'"
+            class="photo-image"
+            loading="lazy">
+          
+          <div class="photo-overlay">
+            <button 
+              class="btn-icon btn-view"
+              (click)="openPhotoModal(photo)"
+              title="View full size">
+              🔍
+            </button>
+            
+            <button 
+              class="btn-icon btn-delete"
+              (click)="deletePhoto(photo)"
+              title="Delete photo">
+              🗑️
+            </button>
+          </div>
+        </div>
+        
+        <div class="photo-info" *ngIf="photo.originalName">
+          <small>{{ photo.originalName }}</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty Photos State -->
+  <div class="empty-photos" *ngIf="!hasPhotos()">
+    <div class="empty-icon">📸</div>
+    <p>No photos yet. Add some memories to this location!</p>
+  </div>
+</div>

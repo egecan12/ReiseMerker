@@ -1,0 +1,92 @@
+<div class="location-tracker">
+  <div class="card">
+    <div class="card-header">
+      <h2>📍 Save New Location</h2>
+    </div>
+    
+    <div class="card-body">
+      <!-- Message area -->
+      <div *ngIf="message" class="message" [ngClass]="messageType" (click)="clearMessage()">
+        {{ message }}
+        <span class="close-btn">×</span>
+      </div>
+
+      <!-- Location information -->
+      <div class="position-info" *ngIf="currentPosition">
+        <h3>📍 Current Location</h3>
+        <div class="coordinates">
+          <p><strong>Latitude:</strong> {{ currentPosition.latitude | number:'1.6-6' }}</p>
+          <p><strong>Longitude:</strong> {{ currentPosition.longitude | number:'1.6-6' }}</p>
+          <p><strong>Accuracy:</strong> {{ currentPosition.accuracy | number:'1.0-0' }}m</p>
+        </div>
+        <button type="button" class="btn btn-secondary" (click)="openInMaps()">
+          🗺️ Show on Map
+        </button>
+      </div>
+
+      <!-- Form -->
+      <form class="location-form" (ngSubmit)="saveLocation()">
+        <!-- Location name -->
+        <div class="form-group">
+          <label for="locationName">Location Name *</label>
+          <input 
+            type="text" 
+            id="locationName"
+            name="locationName"
+            [(ngModel)]="locationName"
+            placeholder="e.g., Office, Home, Favorite Cafe..."
+            required
+            [disabled]="isLoading">
+        </div>
+
+        <!-- Description -->
+        <div class="form-group">
+          <label for="description">Description (Optional)</label>
+          <textarea 
+            id="description"
+            name="description"
+            [(ngModel)]="description"
+            rows="3"
+            placeholder="Your notes about this place..."
+            [disabled]="isLoading"></textarea>
+        </div>
+
+        <!-- Photo Selection -->
+        <div class="form-group">
+          <label for="photoInput">📸 Add Photos (Optional)</label>
+          <input 
+            type="file" 
+            id="photoInput"
+            accept="image/*" 
+            multiple 
+            (change)="onFileSelect($event)"
+            [disabled]="isLoading"
+            class="file-input">
+          <div class="file-input-info" *ngIf="selectedFiles">
+            <small>{{ selectedFiles.length }} photo(s) selected: {{ getSelectedFileNames() }}</small>
+          </div>
+          <small class="form-hint">Max 5 photos, 5MB each (JPEG, PNG, GIF, WebP)</small>
+        </div>
+
+        <!-- Save button -->
+        <div class="form-actions">
+          <button 
+            type="submit" 
+            class="btn btn-success"
+            [disabled]="!locationName.trim() || isLoading">
+            <span *ngIf="isLoading">💾 Saving...</span>
+            <span *ngIf="!isLoading">💾 Save Location</span>
+          </button>
+          
+          <button 
+            type="button" 
+            class="btn btn-outline"
+            (click)="resetForm()"
+            [disabled]="isLoading">
+            🔄 Clear
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

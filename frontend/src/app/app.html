@@ -1,0 +1,28 @@
+<div class="app-container">
+  <header class="app-header">
+    <div class="container">
+      <h1 class="app-title">📍 {{ title }}</h1>
+      <p class="app-subtitle">Save and track the places you visit</p>
+    </div>
+  </header>
+
+  <main class="app-main">
+    <div class="container">
+      <!-- Location saving form -->
+      <section class="tracker-section">
+        <app-location-tracker></app-location-tracker>
+      </section>
+
+      <!-- Saved locations list -->
+      <section class="list-section">
+        <app-location-list></app-location-list>
+      </section>
+    </div>
+  </main>
+
+  <footer class="app-footer">
+    <div class="container">
+      <p>&copy; 2025 Location Tracking App. All rights reserved.</p>
+    </div>
+  </footer>
+</div>

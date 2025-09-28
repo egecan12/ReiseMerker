@@ -1,0 +1,101 @@
+<div class="location-list">
+  <div class="list-header">
+    <h2>📋 Saved Locations</h2>
+    <button class="btn btn-primary refresh-btn" (click)="loadLocations()" [disabled]="isLoading">
+      <span *ngIf="isLoading">🔄 Loading...</span>
+      <span *ngIf="!isLoading">🔄 Refresh</span>
+    </button>
+  </div>
+
+  <!-- Message area -->
+  <div *ngIf="message" class="message" [ngClass]="messageType" (click)="clearMessage()">
+    {{ message }}
+    <span class="close-btn">×</span>
+  </div>
+
+  <!-- Loading indicator -->
+  <div *ngIf="isLoading" class="loading">
+    <div class="spinner"></div>
+    <p>Loading locations...</p>
+  </div>
+
+  <!-- Location list -->
+  <div *ngIf="!isLoading" class="locations-container">
+    <!-- Empty list state -->
+    <div *ngIf="locations.length === 0" class="empty-state">
+      <div class="empty-icon">📍</div>
+      <h3>No locations saved yet</h3>
+      <p>Use the form above to start saving your locations.</p>
+    </div>
+
+    <!-- Location cards -->
+    <div *ngIf="locations.length > 0" class="locations-grid">
+      <div *ngFor="let location of locations; trackBy: trackByLocation" class="location-card">
+        <div class="card-header">
+          <h3 class="location-name">{{ location.name }}</h3>
+          <div class="card-actions">
+            <button 
+              class="btn-icon btn-map" 
+              (click)="openInMaps(location)"
+              title="Show on map">
+              🗺️
+            </button>
+            <button 
+              class="btn-icon btn-delete" 
+              (click)="deleteLocation(location)"
+              title="Delete">
+              🗑️
+            </button>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <!-- Description -->
+          <div *ngIf="location.description" class="description">
+            <p>{{ location.description }}</p>
+          </div>
+
+          <!-- Coordinates -->
+          <div class="coordinates">
+            <div class="coord-item">
+              <span class="label">📍 Latitude:</span>
+              <span class="value">{{ formatCoordinate(location.latitude) }}</span>
+            </div>
+            <div class="coord-item">
+              <span class="label">📍 Longitude:</span>
+              <span class="value">{{ formatCoordinate(location.longitude) }}</span>
+            </div>
+          </div>
+
+          <!-- Date -->
+          <div class="timestamp">
+            <span class="label">🕒 Saved on:</span>
+            <span class="value">{{ formatDate(location.timestamp) }}</span>
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <button 
+            class="btn btn-outline btn-small"
+            (click)="openInMaps(location)">
+            🗺️ Show on Map
+          </button>
+        </div>
+
+        <!-- Photo Upload Component -->
+        <div class="photo-section">
+          <app-photo-upload
+            [location]="location"
+            (photosUploaded)="onPhotosUploaded($event)"
+            (photoDeleted)="onPhotoDeleted($event)">
+          </app-photo-upload>
+        </div>
+      </div>
+    </div>
+
+    <!-- Counter -->
+    <div *ngIf="locations.length > 0" class="location-count">
+      <p>Total {{ locations.length }} locations saved</p>
+    </div>
+  </div>
+</div>

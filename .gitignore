@@ -1,0 +1,58 @@
+# Location Notebook - Main .gitignore
+
+# Environment variables (CRITICAL - contains sensitive data)
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+.env.staging
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+
+# Temporary folders
+tmp/
+temp/
+
+# Archive files
+*.zip
+*.tar.gz
+*.rar
+
+# Backup files
+*.backup
+*.bak
+
+# Local development files
+.local/
