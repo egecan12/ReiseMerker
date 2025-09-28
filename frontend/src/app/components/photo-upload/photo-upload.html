@@ -5,9 +5,19 @@
     <span class="close-btn">×</span>
   </div>
 
-  <!-- Upload Section -->
-  <div class="upload-section">
-    <h4>📸 Add Photos</h4>
+  <!-- Photo Section Header -->
+  <div class="photo-header" (click)="togglePhotoSection()">
+    <h4>
+      📸 Add Photos
+      <span class="photo-count-badge" *ngIf="hasPhotos()">{{ location.photos?.length }}</span>
+    </h4>
+    <div class="toggle-icon" [class.expanded]="isExpanded">
+      <span>{{ isExpanded ? '▲' : '▼' }}</span>
+    </div>
+  </div>
+
+  <!-- Upload Section (Collapsible) -->
+  <div class="upload-section" [class.expanded]="isExpanded" *ngIf="isExpanded">
     
     <!-- Drag & Drop Area -->
     <div 
@@ -57,10 +67,48 @@
         🗑️ Clear
       </button>
     </div>
+
+    <!-- Existing Photos in Expanded State -->
+    <div class="existing-photos-expanded" *ngIf="hasPhotos()">
+      <h4>📷 Current Photos ({{ location.photos?.length }})</h4>
+      
+      <div class="photos-grid">
+        <div *ngFor="let photo of location.photos; trackBy: trackByPhoto" class="photo-item">
+          <div class="photo-wrapper">
+            <img 
+              [src]="photo.url" 
+              [alt]="photo.originalName || 'Location photo'"
+              class="photo-image"
+              loading="lazy">
+            
+            <div class="photo-overlay">
+              <button 
+                class="btn-icon btn-view"
+                (click)="openPhotoModal(photo)"
+                title="View full size">
+                🔍
+              </button>
+              
+              <button 
+                class="btn-icon btn-delete"
+                (click)="deletePhoto(photo)"
+                title="Delete photo">
+                🗑️
+              </button>
+            </div>
+          </div>
+          
+          <div class="photo-info" *ngIf="photo.originalName">
+            <small>{{ photo.originalName }}</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
-  <!-- Existing Photos -->
-  <div class="photos-section" *ngIf="hasPhotos()">
+  <!-- Existing Photos (always visible when collapsed) -->
+  <div class="photos-section" *ngIf="hasPhotos() && !isExpanded">
     <h4>📷 Photos ({{ location.photos?.length }})</h4>
     
     <div class="photos-grid">
@@ -96,9 +144,4 @@
     </div>
   </div>
 
-  <!-- Empty Photos State -->
-  <div class="empty-photos" *ngIf="!hasPhotos()">
-    <div class="empty-icon">📸</div>
-    <p>No photos yet. Add some memories to this location!</p>
-  </div>
 </div>

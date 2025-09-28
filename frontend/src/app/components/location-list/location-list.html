@@ -49,28 +49,32 @@
           </div>
         </div>
 
+        <!-- Photo Preview -->
+        <div class="photo-preview" *ngIf="location.photos && location.photos.length > 0">
+          <img 
+            [src]="location.photos[0].url" 
+            [alt]="location.name"
+            class="preview-image"
+            loading="lazy">
+          <div class="photo-count" *ngIf="location.photos.length > 1">
+            <span>+{{ location.photos.length - 1 }}</span>
+          </div>
+        </div>
+
+        <!-- Placeholder when no photos -->
+        <div class="photo-placeholder" *ngIf="!location.photos || location.photos.length === 0">
+          <div class="placeholder-content">
+            <div class="placeholder-icon">📍</div>
+            <div class="placeholder-coordinates">
+              <span>{{ formatCoordinate(location.latitude) }}, {{ formatCoordinate(location.longitude) }}</span>
+            </div>
+          </div>
+        </div>
+
         <div class="card-body">
           <!-- Description -->
           <div *ngIf="location.description" class="description">
             <p>{{ location.description }}</p>
-          </div>
-
-          <!-- Coordinates -->
-          <div class="coordinates">
-            <div class="coord-item">
-              <span class="label">📍 Latitude:</span>
-              <span class="value">{{ formatCoordinate(location.latitude) }}</span>
-            </div>
-            <div class="coord-item">
-              <span class="label">📍 Longitude:</span>
-              <span class="value">{{ formatCoordinate(location.longitude) }}</span>
-            </div>
-          </div>
-
-          <!-- Date -->
-          <div class="timestamp">
-            <span class="label">🕒 Saved on:</span>
-            <span class="value">{{ formatDate(location.timestamp) }}</span>
           </div>
         </div>
 

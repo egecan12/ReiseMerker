@@ -18,8 +18,19 @@ export class PhotoUploadComponent {
   uploadMessage: string = '';
   messageType: 'success' | 'error' | 'info' = 'info';
   dragOver: boolean = false;
+  isExpanded: boolean = false; // Collapsed by default
 
   constructor(private locationService: LocationService) {}
+
+  // Toggle photo section visibility
+  togglePhotoSection(): void {
+    this.isExpanded = !this.isExpanded;
+    
+    // Clear message when closing
+    if (!this.isExpanded) {
+      this.uploadMessage = '';
+    }
+  }
 
   // Handle file selection
   onFileSelect(event: any): void {

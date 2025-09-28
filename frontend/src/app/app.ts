@@ -9,5 +9,5 @@ import { LocationListComponent } from './components/location-list/location-list'
   styleUrl: './app.css'
 })
 export class App {
-  title = 'Location Tracking App';
+  title = 'Reise Merker';
 }
