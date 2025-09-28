@@ -108,10 +108,10 @@ export class LocationTrackerComponent {
     }
   }
 
-  // Show in Google Maps
+  // Show in Apple Maps
   openInMaps(): void {
     if (this.currentPosition) {
-      const url = this.locationService.getGoogleMapsUrl(
+      const url = this.locationService.getAppleMapsUrl(
         this.currentPosition.latitude, 
         this.currentPosition.longitude
       );

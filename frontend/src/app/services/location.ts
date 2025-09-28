@@ -127,9 +127,9 @@ export class LocationService {
     return degrees * (Math.PI / 180);
   }
 
-  // Generate Google Maps URL
-  getGoogleMapsUrl(latitude: number, longitude: number): string {
-    return `https://www.google.com/maps?q=${latitude},${longitude}`;
+  // Generate Apple Maps URL
+  getAppleMapsUrl(latitude: number, longitude: number): string {
+    return `https://maps.apple.com/?q=${latitude},${longitude}`;
   }
 
   // Upload photos for a location

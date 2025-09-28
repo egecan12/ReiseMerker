@@ -142,9 +142,9 @@ export class LocationListComponent implements OnInit, OnDestroy {
     return location.id || location._id || index.toString();
   }
 
-  // Open in Google Maps
+  // Open in Apple Maps
   openInMaps(location: LocationData): void {
-    const url = this.locationService.getGoogleMapsUrl(location.latitude, location.longitude);
+    const url = this.locationService.getAppleMapsUrl(location.latitude, location.longitude);
     window.open(url, '_blank');
   }
 
