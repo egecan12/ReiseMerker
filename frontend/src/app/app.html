@@ -26,23 +26,23 @@
 
   <footer class="app-footer">
     <div class="container">
-      <p>&copy; 2025 Location Notebook. All rights reserved.</p>
+      <p>&copy; Egecan Kahyaoglu</p>
     </div>
   </footer>
 
-  <!-- Add Location Modal -->
-  <div class="modal-overlay" *ngIf="showAddLocationModal" (click)="closeAddLocation()">
-    <div class="modal-content" (click)="$event.stopPropagation()">
-      <div class="modal-header">
-        <h3>📍 Add New Location</h3>
-        <button class="modal-close" (click)="closeAddLocation()" title="Close">
-          <span class="close-icon">✕</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <app-location-tracker (locationAdded)="closeAddLocation()"></app-location-tracker>
-      </div>
+</div>
+
+<!-- Add Location Modal -->
+<div class="modal-overlay" *ngIf="showAddLocationModal" (click)="closeAddLocation()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>📍 Add New Location</h3>
+      <button class="modal-close" (click)="closeAddLocation()" title="Close">
+        <span class="close-icon">✕</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <app-location-tracker (locationAdded)="closeAddLocation()"></app-location-tracker>
     </div>
   </div>
-
 </div>

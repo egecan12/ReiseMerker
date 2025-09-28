@@ -1,10 +1,4 @@
 <div class="location-list">
-  <div class="list-header">
-    <button class="btn btn-primary refresh-btn" (click)="loadLocations()" [disabled]="isLoading">
-      <span *ngIf="isLoading">🔄 Loading...</span>
-      <span *ngIf="!isLoading">🔄 Refresh</span>
-    </button>
-  </div>
 
   <!-- Message area -->
   <div *ngIf="message" class="message" [ngClass]="messageType" (click)="clearMessage()">

@@ -4,36 +4,6 @@
   padding: 20px;
 }
 
-/* Liste başlığı */
-.list-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 30px;
-  padding: 20px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.list-header h2 {
-  margin: 0;
-  font-size: 1.5rem;
-  font-weight: 600;
-}
-
-.refresh-btn {
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  backdrop-filter: blur(10px);
-}
-
-.refresh-btn:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.3);
-  transform: translateY(-2px);
-}
 
 /* Mesaj stilleri */
 .message {
@@ -130,12 +100,13 @@
 
 /* Lokasyon kartları */
 .location-card {
-  background: #fff;
+  background: rgba(255, 255, 255, 0.9);
   border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
   overflow: hidden;
   transition: all 0.3s ease;
   border: 2px solid transparent;
+  backdrop-filter: blur(10px);
 }
 
 .location-card:hover {
@@ -362,7 +333,7 @@
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: transparent;
   color: white;
 }
 
@@ -405,11 +376,6 @@
     padding: 10px;
   }
   
-  .list-header {
-    flex-direction: column;
-    gap: 15px;
-    text-align: center;
-  }
   
   .locations-grid {
     grid-template-columns: 1fr;
