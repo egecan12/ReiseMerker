@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LocationService, LocationData, GeolocationPosition, PhotoData } from '../../services/location';
@@ -10,6 +10,8 @@ import { LocationService, LocationData, GeolocationPosition, PhotoData } from '.
   styleUrl: './location-tracker.css'
 })
 export class LocationTrackerComponent {
+  @Output() locationAdded = new EventEmitter<void>();
+  
   locationName: string = '';
   description: string = '';
   currentPosition: GeolocationPosition | null = null;
@@ -66,6 +68,7 @@ export class LocationTrackerComponent {
               this.messageType = 'success';
               this.resetForm();
               this.locationService.loadLocations(); // Refresh the list
+              this.locationAdded.emit(); // Emit event to close modal
             }
           } else {
             this.message = response.message || 'Save failed';

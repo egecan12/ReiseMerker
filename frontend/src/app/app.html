@@ -8,21 +8,41 @@
 
   <main class="app-main">
     <div class="container">
-      <!-- Location saving form -->
-      <section class="tracker-section">
-        <app-location-tracker></app-location-tracker>
-      </section>
+      <!-- Add Location Button -->
+      <div class="add-location-header">
+        <h2>📋 Saved Locations</h2>
+        <button class="btn btn-primary btn-add" (click)="openAddLocation()" title="Add new location">
+          <span class="plus-icon">+</span>
+          Add Location
+        </button>
+      </div>
 
       <!-- Saved locations list -->
       <section class="list-section">
         <app-location-list></app-location-list>
       </section>
-  </div>
-</main>
+    </div>
+  </main>
 
   <footer class="app-footer">
     <div class="container">
-      <p>&copy; 2025 Location Tracking App. All rights reserved.</p>
+      <p>&copy; 2025 Location Notebook. All rights reserved.</p>
     </div>
   </footer>
+
+  <!-- Add Location Modal -->
+  <div class="modal-overlay" *ngIf="showAddLocationModal" (click)="closeAddLocation()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>📍 Add New Location</h3>
+        <button class="modal-close" (click)="closeAddLocation()" title="Close">
+          <span class="close-icon">✕</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-location-tracker (locationAdded)="closeAddLocation()"></app-location-tracker>
+      </div>
+    </div>
+  </div>
+
 </div>

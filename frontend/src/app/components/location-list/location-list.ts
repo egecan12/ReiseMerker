@@ -1,12 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LocationService, LocationData, PhotoData } from '../../services/location';
-import { PhotoUploadComponent } from '../photo-upload/photo-upload';
 import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-location-list',
-  imports: [CommonModule, PhotoUploadComponent],
+  imports: [CommonModule],
   templateUrl: './location-list.html',
   styleUrl: './location-list.css'
 })
@@ -88,11 +87,6 @@ export class LocationListComponent implements OnInit, OnDestroy {
     });
   }
 
-  // Open in Google Maps
-  openInMaps(location: LocationData): void {
-    const url = this.locationService.getGoogleMapsUrl(location.latitude, location.longitude);
-    window.open(url, '_blank');
-  }
 
   // Format date
   formatDate(date: Date | string | undefined): string {
@@ -147,23 +141,45 @@ export class LocationListComponent implements OnInit, OnDestroy {
     return location.id || location._id || index.toString();
   }
 
-  // Handle photos uploaded
-  onPhotosUploaded(newPhotos: PhotoData[]): void {
-    console.log('Photos uploaded event received:', newPhotos);
-    this.message = `${newPhotos.length} photo(s) added successfully`;
-    this.messageType = 'success';
-    
-    // Reload locations to get fresh data
-    this.locationService.loadLocations();
+  // Open in Google Maps
+  openInMaps(location: LocationData): void {
+    const url = this.locationService.getGoogleMapsUrl(location.latitude, location.longitude);
+    window.open(url, '_blank');
   }
 
-  // Handle photo deleted
-  onPhotoDeleted(photoId: string): void {
-    console.log('Photo deleted event received:', photoId);
-    this.message = 'Photo deleted successfully';
-    this.messageType = 'success';
-    
-    // Reload locations to get fresh data
-    this.locationService.loadLocations();
+
+  // Delete photo
+  deletePhoto(location: LocationData, photo: PhotoData): void {
+    if (!confirm('Are you sure you want to delete this photo?')) {
+      return;
+    }
+
+    const locationId = location.id || location._id;
+    if (!locationId) return;
+
+    this.locationService.deletePhoto(locationId, photo.publicId).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.message = 'Photo deleted successfully';
+          this.messageType = 'success';
+          this.loadLocations();
+        } else {
+          this.message = 'Failed to delete photo';
+          this.messageType = 'error';
+        }
+      },
+      error: (error) => {
+        console.error('Delete photo error:', error);
+        this.message = 'Error deleting photo';
+        this.messageType = 'error';
+      }
+    });
   }
+
+  // View photo in full size
+  viewPhoto(photo: PhotoData): void {
+    window.open(photo.url, '_blank');
+  }
+
+
 }
