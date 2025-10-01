@@ -1,3 +1,24 @@
+.location-tracker-page {
+  padding: 20px 0;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.page-header h2 {
+  color: white;
+  font-size: 2rem;
+  margin-bottom: 10px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.page-header p {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1.1rem;
+}
+
 .location-tracker {
   max-width: 600px;
   margin: 0 auto;
@@ -18,7 +39,8 @@
   text-align: center;
 }
 
-.card-header h2 {
+.card-header h2,
+.card-header h3 {
   margin: 0;
   font-size: 1.5rem;
   font-weight: 600;
@@ -247,6 +269,14 @@
 
 /* Responsive tasarım */
 @media (max-width: 768px) {
+  .page-header h2 {
+    font-size: 1.8rem;
+  }
+  
+  .page-header p {
+    font-size: 1rem;
+  }
+  
   .location-tracker {
     padding: 10px;
   }

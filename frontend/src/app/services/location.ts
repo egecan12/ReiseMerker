@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
+import { AuthService } from './auth.service';
 
 export interface PhotoData {
   url: string;
@@ -41,8 +42,11 @@ export class LocationService {
   private locationsSubject = new BehaviorSubject<LocationData[]>([]);
   public locations$ = this.locationsSubject.asObservable();
 
-  constructor(private http: HttpClient) {
-    this.loadLocations();
+  constructor(private http: HttpClient, private authService: AuthService) {
+    // Only load locations if user is authenticated
+    if (this.authService.isAuthenticated()) {
+      this.loadLocations();
+    }
   }
 
   // Get current position using Geolocation API
@@ -87,7 +91,13 @@ export class LocationService {
 
   // Load all locations
   loadLocations(): void {
-    this.http.get<ApiResponse<LocationData[]>>(`${this.apiUrl}/locations`)
+    if (!this.authService.isAuthenticated()) {
+      console.warn('User not authenticated, cannot load locations');
+      return;
+    }
+
+    const headers = this.authService.getAuthHeaders();
+    this.http.get<ApiResponse<LocationData[]>>(`${this.apiUrl}/locations`, { headers })
       .subscribe({
         next: (response) => {
           if (response.success && response.data) {
@@ -96,18 +106,24 @@ export class LocationService {
         },
         error: (error) => {
           console.error('Failed to load locations:', error);
+          if (error.status === 401) {
+            // Token expired, redirect to login
+            this.authService.clearAuthData();
+          }
         }
       });
   }
 
   // Save new location
   saveLocation(location: Omit<LocationData, 'id' | 'timestamp'>): Observable<ApiResponse<LocationData>> {
-    return this.http.post<ApiResponse<LocationData>>(`${this.apiUrl}/locations`, location);
+    const headers = this.authService.getAuthHeaders();
+    return this.http.post<ApiResponse<LocationData>>(`${this.apiUrl}/locations`, location, { headers });
   }
 
   // Delete location
   deleteLocation(id: string): Observable<ApiResponse<any>> {
-    return this.http.delete<ApiResponse<any>>(`${this.apiUrl}/locations/${id}`);
+    const headers = this.authService.getAuthHeaders();
+    return this.http.delete<ApiResponse<any>>(`${this.apiUrl}/locations/${id}`, { headers });
   }
 
   // Calculate distance between locations (in kilometers)
@@ -140,13 +156,18 @@ export class LocationService {
       formData.append('photos', files[i]);
     }
 
-    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/locations/${locationId}/photos`, formData);
+    let headers = this.authService.getAuthHeaders();
+    // Remove Content-Type header for FormData uploads
+    headers = headers.delete('Content-Type');
+    
+    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/locations/${locationId}/photos`, formData, { headers });
   }
 
   // Delete a specific photo
   deletePhoto(locationId: string, photoId: string): Observable<ApiResponse<any>> {
     // Encode the photoId to handle slashes in Cloudinary publicId
     const encodedPhotoId = encodeURIComponent(photoId);
-    return this.http.delete<ApiResponse<any>>(`${this.apiUrl}/locations/${locationId}/photos/${encodedPhotoId}`);
+    const headers = this.authService.getAuthHeaders();
+    return this.http.delete<ApiResponse<any>>(`${this.apiUrl}/locations/${locationId}/photos/${encodedPhotoId}`, { headers });
   }
 }

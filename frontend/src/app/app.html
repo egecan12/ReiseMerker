@@ -1,26 +1,38 @@
-<div class="app-container">
+<div class="app-container" *ngIf="isAuthenticated; else loginTemplate">
   <header class="app-header">
     <div class="container">
-      <h1 class="app-title"> {{ title }}</h1>
-      <p class="app-subtitle">Save and track the places you visit</p>
+      <div class="header-content">
+        <div class="app-info">
+          <h1 class="app-title">{{ title }}</h1>
+          <p class="app-subtitle">Save and track the places you visit</p>
+        </div>
+        <div class="user-info">
+          <div class="user-details">
+            <img [src]="currentUser?.picture" [alt]="currentUser?.name" class="user-avatar">
+            <span class="user-name">{{ currentUser?.name }}</span>
+          </div>
+          <button class="btn btn-secondary btn-logout" (click)="logout()" title="Logout">
+            Logout
+          </button>
+        </div>
+      </div>
     </div>
   </header>
 
   <main class="app-main">
     <div class="container">
-      <!-- Add Location Button -->
-      <div class="add-location-header">
-        <h2>Saved Locations</h2>
-        <button class="btn btn-primary btn-add" (click)="openAddLocation()" title="Add new location">
-          <span class="plus-icon">+</span>
-          Add Location
+      <!-- Navigation -->
+      <nav class="app-nav">
+        <button class="nav-btn" [class.active]="currentRoute === '/list'" (click)="navigateTo('/list')">
+          📍 My Locations
         </button>
-      </div>
+        <button class="nav-btn" [class.active]="currentRoute === '/tracker'" (click)="navigateTo('/tracker')">
+          ➕ Add Location
+        </button>
+      </nav>
 
-      <!-- Saved locations list -->
-      <section class="list-section">
-        <app-location-list></app-location-list>
-      </section>
+      <!-- Router Outlet -->
+      <router-outlet></router-outlet>
     </div>
   </main>
 
@@ -29,20 +41,9 @@
       <p>&copy; Egecan Kahyaoglu</p>
     </div>
   </footer>
-
 </div>
 
-<!-- Add Location Modal -->
-<div class="modal-overlay" *ngIf="showAddLocationModal" (click)="closeAddLocation()">
-  <div class="modal-content" (click)="$event.stopPropagation()">
-    <div class="modal-header">
-      <h3>📍 Add New Location</h3>
-      <button class="modal-close" (click)="closeAddLocation()" title="Close">
-        <span class="close-icon">✕</span>
-      </button>
-    </div>
-    <div class="modal-body">
-      <app-location-tracker (locationAdded)="closeAddLocation()"></app-location-tracker>
-    </div>
-  </div>
-</div>
+<!-- Login Template -->
+<ng-template #loginTemplate>
+  <router-outlet></router-outlet>
+</ng-template>

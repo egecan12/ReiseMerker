@@ -1,17 +1,37 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const session = require('express-session');
 // Load environment variables
 require('dotenv').config();
 
 const { upload, deleteImage, testCloudinaryConnection } = require('./config/cloudinary');
+const { passport, generateToken, verifyToken } = require('./config/auth');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:4200', // Angular dev server
+  credentials: true
+}));
 app.use(express.json());
+
+// Session configuration
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'your-session-secret',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: false, // Set to true in production with HTTPS
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  }
+}));
+
+// Initialize Passport
+app.use(passport.initialize());
+app.use(passport.session());
 
 // MongoDB connection
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/location-tracker';
@@ -77,6 +97,10 @@ const locationSchema = new mongoose.Schema({
     type: String,
     default: ''
   },
+  userId: {
+    type: String,
+    required: true
+  },
   photos: [{
     url: {
       type: String,
@@ -102,19 +126,68 @@ const Location = mongoose.model('Location', locationSchema);
 
 // Routes
 
-// Get all locations
-app.get('/api/locations', async (req, res) => {
+// Authentication Routes
+app.get('/api/auth/google', (req, res, next) => {
+  console.log('🔐 Google OAuth initiated');
+  passport.authenticate('google', { scope: ['profile', 'email'] })(req, res, next);
+});
+
+app.get('/api/auth/google/callback', 
+  passport.authenticate('google', { failureRedirect: 'http://localhost:4200/login' }),
+  (req, res) => {
+    console.log('🔐 Google OAuth callback - User:', req.user);
+    
+    // Generate JWT token
+    const token = generateToken(req.user);
+    console.log('🔐 Generated token:', token.substring(0, 50) + '...');
+    
+    // Redirect to frontend with token
+    const redirectUrl = `http://localhost:4200/auth-success?token=${token}`;
+    console.log('🔐 Redirecting to:', redirectUrl);
+    res.redirect(redirectUrl);
+  }
+);
+
+// Get current user info
+app.get('/api/auth/me', verifyToken, (req, res) => {
+  res.json({
+    success: true,
+    data: req.user
+  });
+});
+
+// Logout
+app.post('/api/auth/logout', (req, res) => {
+  req.logout((err) => {
+    if (err) {
+      return res.status(500).json({
+        success: false,
+        message: 'Logout failed'
+      });
+    }
+    res.json({
+      success: true,
+      message: 'Logged out successfully'
+    });
+  });
+});
+
+// Get all locations (filtered by authenticated user)
+app.get('/api/locations', verifyToken, async (req, res) => {
   try {
+    const userId = req.user.googleId;
     let locationData;
     
     if (useInMemory || mongoose.connection.readyState !== 1) {
       // Use in-memory storage
-      locationData = locations.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-      console.log('📝 Locations retrieved from in-memory storage');
+      locationData = locations
+        .filter(loc => loc.userId === userId)
+        .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+      console.log('📝 Locations retrieved from in-memory storage for user:', userId);
     } else {
       // Use MongoDB
-      locationData = await Location.find().sort({ timestamp: -1 });
-      console.log('📝 Locations retrieved from MongoDB');
+      locationData = await Location.find({ userId }).sort({ timestamp: -1 });
+      console.log('📝 Locations retrieved from MongoDB for user:', userId);
     }
     
     res.json({
@@ -133,9 +206,10 @@ app.get('/api/locations', async (req, res) => {
 });
 
 // Save new location
-app.post('/api/locations', async (req, res) => {
+app.post('/api/locations', verifyToken, async (req, res) => {
   try {
     const { name, latitude, longitude, description } = req.body;
+    const userId = req.user.googleId;
 
     // Validation
     if (!name || latitude === undefined || longitude === undefined) {
@@ -163,23 +237,25 @@ app.post('/api/locations', async (req, res) => {
         latitude: parseFloat(latitude),
         longitude: parseFloat(longitude),
         description: description || '',
+        userId: userId,
         timestamp: new Date()
       };
       
       locations.push(newLocation);
       savedLocation = newLocation;
-      console.log('💾 Location saved to in-memory storage');
+      console.log('💾 Location saved to in-memory storage for user:', userId);
     } else {
       // Use MongoDB
       const location = new Location({
         name,
         latitude: parseFloat(latitude),
         longitude: parseFloat(longitude),
-        description: description || ''
+        description: description || '',
+        userId: userId
       });
       
       savedLocation = await location.save();
-      console.log('💾 Location saved to MongoDB');
+      console.log('💾 Location saved to MongoDB for user:', userId);
     }
 
     res.status(201).json({
@@ -199,9 +275,10 @@ app.post('/api/locations', async (req, res) => {
 });
 
 // Upload photos for a location
-app.post('/api/locations/:id/photos', upload.array('photos', 5), async (req, res) => {
+app.post('/api/locations/:id/photos', verifyToken, upload.array('photos', 5), async (req, res) => {
   try {
     const { id } = req.params;
+    const userId = req.user.googleId;
     
     if (!req.files || req.files.length === 0) {
       return res.status(400).json({
@@ -214,12 +291,12 @@ app.post('/api/locations/:id/photos', upload.array('photos', 5), async (req, res
     
     if (useInMemory || mongoose.connection.readyState !== 1) {
       // Use in-memory storage
-      const index = locations.findIndex(loc => loc.id === id);
+      const index = locations.findIndex(loc => loc.id === id && loc.userId === userId);
       
       if (index === -1) {
         return res.status(404).json({
           success: false,
-          message: 'Location not found'
+          message: 'Location not found or access denied'
         });
       }
 
@@ -239,15 +316,15 @@ app.post('/api/locations/:id/photos', upload.array('photos', 5), async (req, res
       locations[index].photos.push(...newPhotos);
       location = locations[index];
       
-      console.log('📸 Photos added to in-memory storage');
+      console.log('📸 Photos added to in-memory storage for user:', userId);
     } else {
       // Use MongoDB
-      location = await Location.findById(id);
+      location = await Location.findOne({ _id: id, userId });
       
       if (!location) {
         return res.status(404).json({
           success: false,
-          message: 'Location not found'
+          message: 'Location not found or access denied'
         });
       }
 
@@ -262,7 +339,7 @@ app.post('/api/locations/:id/photos', upload.array('photos', 5), async (req, res
       location.photos.push(...newPhotos);
       await location.save();
       
-      console.log('📸 Photos added to MongoDB');
+      console.log('📸 Photos added to MongoDB for user:', userId);
     }
 
     res.status(201).json({
@@ -285,17 +362,19 @@ app.post('/api/locations/:id/photos', upload.array('photos', 5), async (req, res
 });
 
 // Delete a specific photo from a location
-app.delete('/api/locations/:locationId/photos/:photoId', async (req, res) => {
+app.delete('/api/locations/:locationId/photos/:photoId', verifyToken, async (req, res) => {
   console.log('🗑️ ROUTE HIT: Delete photo endpoint called!');
   
   try {
     const { locationId } = req.params;
+    const userId = req.user.googleId;
     // Decode the photoId to handle encoded slashes from Cloudinary publicId
     const photoId = decodeURIComponent(req.params.photoId);
     
     console.log('🗑️ Photo delete request received:', {
       locationId,
       photoId,
+      userId,
       originalPhotoId: req.params.photoId,
       useInMemory,
       mongoState: mongoose.connection.readyState,
@@ -308,12 +387,12 @@ app.delete('/api/locations/:locationId/photos/:photoId', async (req, res) => {
 
     if (useInMemory || mongoose.connection.readyState !== 1) {
       // Use in-memory storage
-      const index = locations.findIndex(loc => loc.id === locationId);
+      const index = locations.findIndex(loc => loc.id === locationId && loc.userId === userId);
       
       if (index === -1) {
         return res.status(404).json({
           success: false,
-          message: 'Location not found'
+          message: 'Location not found or access denied'
         });
       }
 
@@ -340,12 +419,12 @@ app.delete('/api/locations/:locationId/photos/:photoId', async (req, res) => {
       console.log('🗑️ Photo removed from in-memory storage');
     } else {
       // Use MongoDB
-      location = await Location.findById(locationId);
+      location = await Location.findOne({ _id: locationId, userId });
       
       if (!location) {
         return res.status(404).json({
           success: false,
-          message: 'Location not found'
+          message: 'Location not found or access denied'
         });
       }
 
@@ -394,14 +473,16 @@ app.delete('/api/locations/:locationId/photos/:photoId', async (req, res) => {
 });
 
 // Delete location
-app.delete('/api/locations/:id', async (req, res) => {
+app.delete('/api/locations/:id', verifyToken, async (req, res) => {
   console.log('🗑️ ROUTE HIT: Delete location endpoint called!');
   
   try {
     const { id } = req.params;
+    const userId = req.user.googleId;
     
     console.log('🗑️ Location delete request received:', {
       locationId: id,
+      userId,
       useInMemory,
       mongoState: mongoose.connection.readyState,
       url: req.url,
@@ -412,28 +493,28 @@ app.delete('/api/locations/:id', async (req, res) => {
 
     if (useInMemory || mongoose.connection.readyState !== 1) {
       // Use in-memory storage
-      const index = locations.findIndex(loc => loc.id === id);
+      const index = locations.findIndex(loc => loc.id === id && loc.userId === userId);
       
       if (index === -1) {
         return res.status(404).json({
           success: false,
-          message: 'Location not found'
+          message: 'Location not found or access denied'
         });
       }
 
       deletedLocation = locations.splice(index, 1)[0];
-      console.log('🗑️ Location deleted from in-memory storage');
+      console.log('🗑️ Location deleted from in-memory storage for user:', userId);
     } else {
       // Use MongoDB
-      deletedLocation = await Location.findByIdAndDelete(id);
+      deletedLocation = await Location.findOneAndDelete({ _id: id, userId });
       
       if (!deletedLocation) {
         return res.status(404).json({
           success: false,
-          message: 'Location not found'
+          message: 'Location not found or access denied'
         });
       }
-      console.log('🗑️ Location deleted from MongoDB');
+      console.log('🗑️ Location deleted from MongoDB for user:', userId);
     }
 
     // Delete associated photos from Cloudinary

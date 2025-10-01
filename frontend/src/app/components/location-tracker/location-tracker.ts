@@ -1,7 +1,9 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { LocationService, LocationData, GeolocationPosition, PhotoData } from '../../services/location';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-location-tracker',
@@ -9,7 +11,7 @@ import { LocationService, LocationData, GeolocationPosition, PhotoData } from '.
   templateUrl: './location-tracker.html',
   styleUrl: './location-tracker.css'
 })
-export class LocationTrackerComponent {
+export class LocationTrackerComponent implements OnInit {
   @Output() locationAdded = new EventEmitter<void>();
   
   locationName: string = '';
@@ -21,7 +23,19 @@ export class LocationTrackerComponent {
   selectedFiles: FileList | null = null;
   savedLocationId: string | null = null;
 
-  constructor(private locationService: LocationService) {}
+  constructor(
+    private locationService: LocationService, 
+    private router: Router,
+    private authService: AuthService
+  ) {}
+
+  ngOnInit(): void {
+    // Check authentication
+    if (!this.authService.isAuthenticated()) {
+      this.router.navigate(['/login']);
+      return;
+    }
+  }
 
 
   // Save location (auto-get location first)
@@ -69,6 +83,10 @@ export class LocationTrackerComponent {
               this.resetForm();
               this.locationService.loadLocations(); // Refresh the list
               this.locationAdded.emit(); // Emit event to close modal
+              // Navigate back to list after a short delay
+              setTimeout(() => {
+                this.router.navigate(['/list']);
+              }, 2000);
             }
           } else {
             this.message = response.message || 'Save failed';
@@ -171,6 +189,10 @@ export class LocationTrackerComponent {
           this.messageType = 'success';
           this.resetForm();
           this.locationService.loadLocations();
+          // Navigate back to list after a short delay
+          setTimeout(() => {
+            this.router.navigate(['/list']);
+          }, 2000);
         } else {
           this.message = 'Location saved but photo upload failed: ' + response.message;
           this.messageType = 'error';
