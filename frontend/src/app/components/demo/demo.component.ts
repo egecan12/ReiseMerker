@@ -9,65 +9,53 @@ import { Router } from '@angular/router';
   styleUrl: './demo.component.css'
 })
 export class DemoComponent {
-  // Demo data - sample locations
+  // Demo data - sample locations with mock images
   demoLocations = [
     {
       id: 'demo-1',
-      name: 'Golden Gate Bridge',
-      latitude: 37.8199,
-      longitude: -122.4783,
-      description: 'Iconic suspension bridge spanning the Golden Gate strait.',
+      name: 'Carolina Park',
+      latitude: 40.7589,
+      longitude: -73.9851,
+      description: 'Beautiful urban park in the heart of Manhattan with stunning city views and peaceful walking paths.',
       timestamp: new Date('2024-01-15T10:30:00'),
       photos: [
         {
           id: 'demo-photo-1',
-          url: 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=400&h=300&fit=crop',
-          originalName: 'golden-gate-bridge.jpg',
+          url: '/mock-images/carolina-park.avif',
+          originalName: 'carolina-park-view.jpg',
           uploadedAt: new Date('2024-01-15T10:35:00')
-        },
-        {
-          id: 'demo-photo-2',
-          url: 'https://images.unsplash.com/photo-1542223616-740ef5d4e87c?w=400&h=300&fit=crop',
-          originalName: 'golden-gate-sunset.jpg',
-          uploadedAt: new Date('2024-01-15T18:20:00')
         }
       ]
     },
     {
       id: 'demo-2',
-      name: 'Central Park',
-      latitude: 40.7829,
-      longitude: -73.9654,
-      description: 'Large public park in Manhattan, New York City.',
+      name: 'Döner Baba Restaurant',
+      latitude: 41.0082,
+      longitude: 28.9784,
+      description: 'Authentic Turkish döner restaurant in Istanbul, famous for its delicious kebabs and traditional flavors.',
       timestamp: new Date('2024-01-20T14:15:00'),
       photos: [
         {
-          id: 'demo-photo-3',
-          url: 'https://images.unsplash.com/photo-1494522358652-f30e61a3a8e0?w=400&h=300&fit=crop',
-          originalName: 'central-park-lake.jpg',
+          id: 'demo-photo-2',
+          url: '/mock-images/doner-baba.avif',
+          originalName: 'doner-baba-restaurant.jpg',
           uploadedAt: new Date('2024-01-20T14:20:00')
         }
       ]
     },
     {
       id: 'demo-3',
-      name: 'Eiffel Tower',
-      latitude: 48.8584,
-      longitude: 2.2945,
-      description: 'Iron lattice tower on the Champ de Mars in Paris.',
+      name: 'Paris Bistro Café',
+      latitude: 48.8566,
+      longitude: 2.3522,
+      description: 'Charming French bistro in the heart of Paris, offering exquisite cuisine and romantic atmosphere.',
       timestamp: new Date('2024-01-25T16:45:00'),
       photos: [
         {
-          id: 'demo-photo-4',
-          url: 'https://images.unsplash.com/photo-1511739001486-6bfe10ce785f?w=400&h=300&fit=crop',
-          originalName: 'eiffel-tower-night.jpg',
-          uploadedAt: new Date('2024-01-25T20:30:00')
-        },
-        {
-          id: 'demo-photo-5',
-          url: 'https://images.unsplash.com/photo-1550340499-a6c60fc8287c?w=400&h=300&fit=crop',
-          originalName: 'eiffel-tower-day.jpg',
-          uploadedAt: new Date('2024-01-26T11:15:00')
+          id: 'demo-photo-3',
+          url: '/mock-images/paris-restaurant.avif',
+          originalName: 'paris-bistro-cafe.jpg',
+          uploadedAt: new Date('2024-01-25T16:50:00')
         }
       ]
     }
