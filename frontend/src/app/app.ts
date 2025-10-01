@@ -25,60 +25,48 @@ export class App implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // Subscribe to authentication state
-    this.subscription.add(
-      this.authService.currentUser$.subscribe(user => {
-        // Use setTimeout to avoid ExpressionChangedAfterItHasBeenCheckedError
-        setTimeout(() => {
-          this.isAuthenticated = !!user;
-          this.currentUser = user;
-          
-          if (this.isAuthenticated) {
-            // Load locations when user is authenticated
-            this.locationService.loadLocations();
-            
-            // If we're on auth-success page and now authenticated, redirect to main app
-            if (this.router.url.includes('/auth-success')) {
-              this.router.navigate(['/']);
-            }
-          }
-        }, 0);
-      })
-    );
-
-    // Track current route
-    this.subscription.add(
-      this.router.events
-        .pipe(filter(event => event instanceof NavigationEnd))
-        .subscribe((event: NavigationEnd) => {
-          this.currentRoute = event.url;
-          
-          // Check authentication on route change (but allow auth-success and login)
-          const isAuth = this.authService.isAuthenticated();
-          if (!isAuth && !event.url.includes('/auth-success') && !event.url.includes('/login') && event.url !== '/') {
-            this.router.navigate(['/login']);
-          }
-        })
-    );
-
-    // TEMPORARY: Disable initial auth redirect to fix auth-success flow
-    // Authentication will be handled by route guards and auth-success component
+    this.initializeAuthentication();
+    this.trackRouteChanges();
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
 
+  private initializeAuthentication(): void {
+    this.subscription.add(
+      this.authService.currentUser$.subscribe(user => {
+        this.isAuthenticated = !!user;
+        this.currentUser = user;
+        
+        if (this.isAuthenticated) {
+          this.locationService.loadLocations();
+          this.handleAuthSuccessRedirect();
+        }
+      })
+    );
+  }
+
+  private trackRouteChanges(): void {
+    this.subscription.add(
+      this.router.events
+        .pipe(filter(event => event instanceof NavigationEnd))
+        .subscribe((event: NavigationEnd) => {
+          this.currentRoute = event.url;
+        })
+    );
+  }
+
+  private handleAuthSuccessRedirect(): void {
+    if (this.router.url.includes('/auth-success')) {
+      this.router.navigate(['/']);
+    }
+  }
+
   logout(): void {
     this.authService.logout().subscribe({
-      next: () => {
-        this.router.navigate(['/login']);
-      },
-      error: (error) => {
-        console.error('Logout error:', error);
-        // Still redirect to login even if logout fails
-        this.router.navigate(['/login']);
-      }
+      next: () => this.router.navigate(['/login']),
+      error: () => this.router.navigate(['/login'])
     });
   }
 

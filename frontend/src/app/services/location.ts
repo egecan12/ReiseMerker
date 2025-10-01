@@ -4,6 +4,8 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { AuthService } from './auth.service';
 
 export interface PhotoData {
+  id?: string;
+  _id?: string; // MongoDB ObjectId
   url: string;
   publicId: string;
   originalName?: string;

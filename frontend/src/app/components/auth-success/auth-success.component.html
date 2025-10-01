@@ -1,0 +1,14 @@
+<div class="auth-success-container">
+  <div class="auth-success-card">
+    <div class="success-icon">✅</div>
+    <h2>Authentication Successful!</h2>
+    <p>You have been successfully logged in.</p>
+    <div class="loading" *ngIf="isLoading">
+      <p>Redirecting...</p>
+    </div>
+    <div class="error" *ngIf="error">
+      <p>{{ error }}</p>
+      <button (click)="goToLogin()" class="retry-btn">Try Again</button>
+    </div>
+  </div>
+</div>

@@ -1,9 +1,8 @@
-import { Component, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LocationService, LocationData, GeolocationPosition, PhotoData } from '../../services/location';
-import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-location-tracker',
@@ -11,7 +10,7 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './location-tracker.html',
   styleUrl: './location-tracker.css'
 })
-export class LocationTrackerComponent implements OnInit {
+export class LocationTrackerComponent {
   @Output() locationAdded = new EventEmitter<void>();
   
   locationName: string = '';
@@ -25,17 +24,8 @@ export class LocationTrackerComponent implements OnInit {
 
   constructor(
     private locationService: LocationService, 
-    private router: Router,
-    private authService: AuthService
+    private router: Router
   ) {}
-
-  ngOnInit(): void {
-    // Check authentication
-    if (!this.authService.isAuthenticated()) {
-      this.router.navigate(['/login']);
-      return;
-    }
-  }
 
 
   // Save location (auto-get location first)

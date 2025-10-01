@@ -1,0 +1,136 @@
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+}
+
+.login-card {
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  max-width: 450px;
+  width: 100%;
+}
+
+.app-logo {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  text-align: center;
+  padding: 40px 30px;
+}
+
+.app-logo h1 {
+  margin: 0 0 10px 0;
+  font-size: 2.2rem;
+  font-weight: 700;
+}
+
+.app-logo p {
+  margin: 0;
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+.login-content {
+  padding: 40px 30px;
+  text-align: center;
+}
+
+.login-content h2 {
+  color: #2c3e50;
+  margin: 0 0 15px 0;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.login-content p {
+  color: #7f8c8d;
+  margin: 0 0 30px 0;
+  line-height: 1.6;
+  font-size: 1rem;
+}
+
+.google-login-btn {
+  width: 100%;
+  background: white;
+  border: 2px solid #dadce0;
+  border-radius: 12px;
+  padding: 12px 20px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #3c4043;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 30px;
+}
+
+.google-login-btn:hover:not(:disabled) {
+  background: #f8f9fa;
+  border-color: #dadce0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.google-login-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.google-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.login-features {
+  border-top: 1px solid #ecf0f1;
+  padding-top: 25px;
+}
+
+.feature {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 15px;
+  color: #5a6c7d;
+  font-size: 0.95rem;
+}
+
+.feature:last-child {
+  margin-bottom: 0;
+}
+
+.feature-icon {
+  font-size: 1.2rem;
+  width: 24px;
+  text-align: center;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .login-container {
+    padding: 15px;
+  }
+  
+  .app-logo {
+    padding: 30px 20px;
+  }
+  
+  .app-logo h1 {
+    font-size: 1.8rem;
+  }
+  
+  .login-content {
+    padding: 30px 20px;
+  }
+  
+  .login-content h2 {
+    font-size: 1.5rem;
+  }
+}

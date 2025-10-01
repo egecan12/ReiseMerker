@@ -1,0 +1,95 @@
+.auth-success-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+}
+
+.auth-success-card {
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+  text-align: center;
+  max-width: 400px;
+  width: 100%;
+}
+
+.success-icon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+}
+
+.auth-success-card h2 {
+  color: #2c3e50;
+  margin: 0 0 15px 0;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.auth-success-card p {
+  color: #7f8c8d;
+  margin: 0 0 20px 0;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.loading {
+  margin-top: 20px;
+}
+
+.loading p {
+  color: #3498db;
+  font-weight: 500;
+}
+
+.error {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #fee;
+  border: 1px solid #fcc;
+  border-radius: 8px;
+}
+
+.error p {
+  color: #e74c3c;
+  margin: 0 0 15px 0;
+  font-weight: 500;
+}
+
+.retry-btn {
+  background: #e74c3c;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.retry-btn:hover {
+  background: #c0392b;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .auth-success-container {
+    padding: 15px;
+  }
+  
+  .auth-success-card {
+    padding: 30px 20px;
+  }
+  
+  .success-icon {
+    font-size: 3rem;
+  }
+  
+  .auth-success-card h2 {
+    font-size: 1.5rem;
+  }
+}

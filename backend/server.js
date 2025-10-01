@@ -128,22 +128,17 @@ const Location = mongoose.model('Location', locationSchema);
 
 // Authentication Routes
 app.get('/api/auth/google', (req, res, next) => {
-  console.log('🔐 Google OAuth initiated');
   passport.authenticate('google', { scope: ['profile', 'email'] })(req, res, next);
 });
 
 app.get('/api/auth/google/callback', 
   passport.authenticate('google', { failureRedirect: 'http://localhost:4200/login' }),
   (req, res) => {
-    console.log('🔐 Google OAuth callback - User:', req.user);
-    
     // Generate JWT token
     const token = generateToken(req.user);
-    console.log('🔐 Generated token:', token.substring(0, 50) + '...');
     
     // Redirect to frontend with token
     const redirectUrl = `http://localhost:4200/auth-success?token=${token}`;
-    console.log('🔐 Redirecting to:', redirectUrl);
     res.redirect(redirectUrl);
   }
 );

@@ -9,13 +9,6 @@ passport.use(new GoogleStrategy({
   callbackURL: process.env.GOOGLE_CALLBACK_URL || "http://localhost:3000/api/auth/google/callback"
 }, async (accessToken, refreshToken, profile, done) => {
   try {
-    console.log('🔐 Google OAuth Profile:', {
-      id: profile.id,
-      email: profile.emails?.[0]?.value,
-      name: profile.displayName,
-      provider: profile.provider
-    });
-    
     // Extract user information from Google profile
     const user = {
       googleId: profile.id,
@@ -27,7 +20,7 @@ passport.use(new GoogleStrategy({
     
     return done(null, user);
   } catch (error) {
-    console.error('❌ Google OAuth Error:', error);
+    console.error('Google OAuth Error:', error);
     return done(error, null);
   }
 }));
