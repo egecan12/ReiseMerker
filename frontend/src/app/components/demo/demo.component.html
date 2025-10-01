@@ -1,0 +1,96 @@
+<div class="demo-page">
+  <!-- Demo Header -->
+  <div class="demo-header">
+    <div class="demo-badge">
+      <span class="demo-icon">👀</span>
+      <span class="demo-text">DEMO MODE</span>
+    </div>
+    <h1>📍 Location Notebook</h1>
+    <p>See how Location Notebook works with sample data. Sign in to start saving your own locations!</p>
+    <button class="demo-signin-btn" (click)="navigateToLogin()">
+      <span class="btn-icon">🔐</span>
+      Sign in to Get Started
+    </button>
+  </div>
+
+  <!-- Demo Locations -->
+  <div class="demo-locations">
+    <div class="locations-grid">
+      <div class="location-card demo-card" *ngFor="let location of demoLocations; trackBy: trackByLocation">
+        <div class="location-header">
+          <h3 class="location-name">{{ location.name }}</h3>
+          <div class="location-actions">
+            <button class="btn-icon" (click)="openInMaps(location)" title="Open in Maps">
+              🗺️
+            </button>
+          </div>
+        </div>
+        
+        <div class="location-details">
+          <div class="coordinate">
+            <strong>Latitude:</strong> {{ formatCoordinate(location.latitude) }}
+          </div>
+          <div class="coordinate">
+            <strong>Longitude:</strong> {{ formatCoordinate(location.longitude) }}
+          </div>
+          <div class="timestamp">
+            <strong>Added:</strong> {{ formatDate(location.timestamp) }}
+          </div>
+        </div>
+
+        <div class="location-description" *ngIf="location.description">
+          <p>{{ location.description }}</p>
+        </div>
+
+        <div class="photos-section" *ngIf="location.photos && location.photos.length > 0">
+          <h4>📸 Photos ({{ location.photos.length }})</h4>
+          <div class="photos-grid">
+            <div class="photo-item" *ngFor="let photo of location.photos; trackBy: trackByPhoto">
+              <img [src]="photo.url" [alt]="photo.originalName">
+              <div class="photo-info">
+                <span class="photo-name">{{ photo.originalName }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Demo Features -->
+  <div class="demo-features">
+    <h2>✨ What You Can Do</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">📍</div>
+        <h3>Save Locations</h3>
+        <p>Save your favorite places with GPS coordinates and descriptions</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📸</div>
+        <h3>Add Photos</h3>
+        <p>Upload and organize photos for each location</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔒</div>
+        <h3>Private & Secure</h3>
+        <p>Your locations are private and secure with Google authentication</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📱</div>
+        <h3>Mobile Friendly</h3>
+        <p>Access your locations from any device, anywhere</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Call to Action -->
+  <div class="demo-cta">
+    <h2>Ready to Start?</h2>
+    <p>Sign in with your Google account to begin saving your own locations!</p>
+    <button class="cta-button" (click)="navigateToLogin()">
+      <span class="btn-icon">🚀</span>
+      Get Started Now
+    </button>
+  </div>
+</div>

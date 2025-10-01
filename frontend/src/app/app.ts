@@ -27,6 +27,7 @@ export class App implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.initializeAuthentication();
     this.trackRouteChanges();
+    this.checkInitialAuth();
   }
 
   ngOnDestroy(): void {
@@ -42,6 +43,7 @@ export class App implements OnInit, OnDestroy {
         if (this.isAuthenticated) {
           this.locationService.loadLocations();
           this.handleAuthSuccessRedirect();
+          this.redirectAuthenticatedUser();
         }
       })
     );
@@ -59,14 +61,31 @@ export class App implements OnInit, OnDestroy {
 
   private handleAuthSuccessRedirect(): void {
     if (this.router.url.includes('/auth-success')) {
-      this.router.navigate(['/']);
+      this.router.navigate(['/list']);
+    }
+  }
+
+  private redirectAuthenticatedUser(): void {
+    // If authenticated user is on demo page, redirect to list
+    if (this.router.url === '/' || this.router.url === '/demo') {
+      this.router.navigate(['/list']);
+    }
+  }
+
+  private checkInitialAuth(): void {
+    // Check authentication status on app initialization
+    if (this.authService.isAuthenticated()) {
+      // If authenticated and on root or demo, redirect to list
+      if (this.router.url === '/' || this.router.url === '/demo') {
+        this.router.navigate(['/list']);
+      }
     }
   }
 
   logout(): void {
     this.authService.logout().subscribe({
-      next: () => this.router.navigate(['/login']),
-      error: () => this.router.navigate(['/login'])
+      next: () => this.router.navigate(['/demo']),
+      error: () => this.router.navigate(['/demo'])
     });
   }
 

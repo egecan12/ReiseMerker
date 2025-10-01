@@ -30,7 +30,7 @@ export class AuthSuccessComponent implements OnInit {
           
           // Redirect to main app after token is processed
           setTimeout(() => {
-            this.router.navigate(['/']);
+            this.router.navigate(['/list']);
           }, 1000);
         } catch (error) {
           console.error('Authentication error:', error);
