@@ -217,6 +217,60 @@ BACKEND_URL=http://localhost:3000
 
 This project is licensed under the MIT License.
 
+## 🚀 Deployment
+
+### Render Deployment (Current Setup)
+This project is configured for Render deployment:
+
+#### Backend Service (Web Service)
+- **Environment**: Docker
+- **Dockerfile**: `backend/Dockerfile`
+- **Environment Variables**:
+  ```env
+  NODE_ENV=production
+  PORT=3000
+  MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/location-notebook
+  CLOUDINARY_URL=cloudinary://api_key:api_secret@cloud_name
+  GOOGLE_CLIENT_ID=your_google_client_id
+  GOOGLE_CLIENT_SECRET=your_google_client_secret
+  GOOGLE_CALLBACK_URL=https://your-backend-app.onrender.com/api/auth/google/callback
+  JWT_SECRET=your_super_strong_jwt_secret_here
+  SESSION_SECRET=your_super_strong_session_secret_here
+  FRONTEND_URL=https://your-frontend-app.onrender.com
+  ```
+
+#### Frontend Service (Static Site)
+- **Root Directory**: `frontend`
+- **Build Command**: `npm install && npm run build`
+- **Publish Directory**: `dist/frontend/browser`
+- **Environment Variables**:
+  ```env
+  BACKEND_URL=https://your-backend-app.onrender.com
+  ```
+
+### Google OAuth Configuration
+1. Go to [Google Cloud Console](https://console.cloud.google.com/)
+2. Select your project
+3. Go to "APIs & Services" → "Credentials"
+4. Update OAuth 2.0 Client ID:
+   - **Authorized redirect URIs**: `https://your-backend-app.onrender.com/api/auth/google/callback`
+   - **Authorized JavaScript origins**: 
+     - `https://your-backend-app.onrender.com`
+     - `https://your-frontend-app.onrender.com`
+
+### Local Development
+```bash
+# Copy environment file
+cp env.example .env
+
+# Start with Docker
+docker-compose up -d
+
+# Or start manually
+cd backend && npm install && npm start
+cd frontend && npm install && npm start
+```
+
 ## 📞 Support
 
 For questions or issues, please open a GitHub issue.
