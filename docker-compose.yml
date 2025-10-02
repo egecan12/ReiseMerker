@@ -15,7 +15,7 @@ services:
       - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
       - GOOGLE_CALLBACK_URL=${GOOGLE_CALLBACK_URL:-http://localhost:3000/api/auth/google/callback}
       - JWT_SECRET=${JWT_SECRET}
-      - FRONTEND_URL=${FRONTEND_URL:-http://localhost:80}
+      - FRONTEND_URL=${FRONTEND_URL:-http://localhost}
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "node", "healthcheck.js"]
