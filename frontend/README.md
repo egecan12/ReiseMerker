@@ -1,59 +1,126 @@
-# Frontend
+# 📍 Location Notebook - Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.3.
+This is the frontend application for Location Notebook, built with Angular 18+.
 
-## Development server
+## 🚀 Features
 
-To start a local development server, run:
+- **📍 Location Tracking**: Automatic location detection using browser's Geolocation API
+- **📸 Photo Upload**: Upload and manage photos for each location
+- **📋 Location Management**: View, edit, and delete saved locations
+- **🗺️ Maps Integration**: Open locations in Google Maps
+- **📱 Responsive Design**: Modern UI compatible with mobile and desktop
+- **🔐 Authentication**: Google OAuth integration for secure access
 
+## 🛠️ Technologies
+
+- **Angular 18+**: Modern component-based framework
+- **TypeScript**: Type-safe JavaScript
+- **RxJS**: Reactive programming
+- **CSS3**: Modern styling and animations
+
+## 🚀 Development
+
+### Prerequisites
+- Node.js 18+
+- npm 9+
+
+### Installation
+```bash
+cd frontend
+npm install
+```
+
+### Development Server
 ```bash
 ng serve
 ```
+Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
+### Build
 ```bash
 ng build
 ```
+The build artifacts will be stored in the `dist/` directory.
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+### Production Build
+```bash
+ng build --configuration production
+```
 
-## Running unit tests
+## 📁 Project Structure
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+```
+src/
+├── app/
+│   ├── components/
+│   │   ├── auth-success/     # OAuth success page
+│   │   ├── demo/             # Demo component
+│   │   ├── location-list/    # Location list display
+│   │   ├── location-tracker/ # Main location tracking
+│   │   ├── login/            # Login component
+│   │   └── photo-upload/     # Photo upload component
+│   ├── guards/
+│   │   └── auth.guard.ts     # Authentication guard
+│   ├── services/
+│   │   ├── auth.service.ts   # Authentication service
+│   │   └── location.ts       # Location API service
+│   └── ...
+├── environments/
+│   ├── environment.ts        # Development environment
+│   └── environment.prod.ts  # Production environment
+└── ...
+```
 
+## 🔧 Configuration
+
+### Environment Variables
+Update `src/environments/environment.ts` for development:
+```typescript
+export const environment = {
+  production: false,
+  apiUrl: 'http://localhost:3000/api'
+};
+```
+
+Update `src/environments/environment.prod.ts` for production:
+```typescript
+export const environment = {
+  production: true,
+  apiUrl: 'https://your-api-domain.com/api'
+};
+```
+
+## 🧪 Testing
+
+### Unit Tests
 ```bash
 ng test
 ```
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
+### End-to-End Tests
 ```bash
 ng e2e
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## 📦 Docker
 
-## Additional Resources
+The frontend is containerized using Nginx. See the main `DEPLOYMENT.md` for Docker setup instructions.
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## 🔗 API Integration
+
+The frontend communicates with the backend API for:
+- Authentication (Google OAuth)
+- Location CRUD operations
+- Photo upload and management
+- User session management
+
+## 🎨 Styling
+
+- Modern CSS3 with custom properties
+- Responsive design with mobile-first approach
+- Smooth animations and transitions
+- Clean, minimalist UI design
+
+## 🚀 Deployment
+
+For production deployment, see the main `DEPLOYMENT.md` file for Docker-based deployment instructions.

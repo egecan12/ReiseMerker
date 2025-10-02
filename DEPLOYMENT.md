@@ -1,37 +1,37 @@
 # 🚀 Docker Deployment Guide
 
-Bu rehber Location Notebook uygulamasını Docker kullanarak nasıl deploy edeceğinizi gösterir.
+This guide shows how to deploy the Location Notebook application using Docker.
 
-## 📋 Gereksinimler
+## 📋 Requirements
 
 - Docker 20.10+
 - Docker Compose 2.0+
 - Git
 
-## 🔧 Kurulum
+## 🔧 Installation
 
-### 1. Projeyi Klonlayın
+### 1. Clone the Project
 
 ```bash
-git clone https://github.com/egecan12/ReiseMerker.git
-cd ReiseMerker
+git clone <your-repo-url>
+cd location-notebook
 ```
 
-### 2. Environment Variables Ayarlayın
+### 2. Environment Variables Setup
 
 ```bash
-# env.example dosyasını kopyalayın
+# Copy the example environment file
 cp env.example .env
 
-# .env dosyasını düzenleyin
+# Edit the .env file with your credentials
 nano .env
 ```
 
-### 3. Gerekli Environment Variables
+### 3. Required Environment Variables
 
 ```env
 # Database Configuration
-MONGODB_URI=mongodb://localhost:27017/location-notebook
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/location-notebook
 
 # Cloudinary Configuration (Required for photo uploads)
 CLOUDINARY_URL=cloudinary://api_key:api_secret@cloud_name
@@ -44,8 +44,11 @@ GOOGLE_CALLBACK_URL=http://localhost:3000/api/auth/google/callback
 # JWT Secret (Required for authentication)
 JWT_SECRET=your_super_secret_jwt_key_here
 
+# Session Secret (Required for authentication)
+SESSION_SECRET=your_super_secret_session_key_here
+
 # Frontend Configuration
-FRONTEND_URL=http://localhost:4200
+FRONTEND_URL=http://localhost
 BACKEND_URL=http://localhost:3000
 
 # Port Configuration
@@ -53,18 +56,18 @@ BACKEND_PORT=3000
 FRONTEND_PORT=80
 ```
 
-## 🐳 Docker ile Çalıştırma
+## 🐳 Running with Docker
 
 ### Development Mode
 
 ```bash
-# Tüm servisleri başlat
+# Start all services
 docker-compose up -d
 
-# Logları takip et
+# Follow logs
 docker-compose logs -f
 
-# Servisleri durdur
+# Stop services
 docker-compose down
 ```
 
@@ -72,55 +75,55 @@ docker-compose down
 
 ```bash
 # Production build
-docker-compose -f docker-compose.yml up -d --build
+docker-compose up -d --build
 
-# Logları kontrol et
+# Check logs
 docker-compose logs -f backend
 docker-compose logs -f frontend
 ```
 
-## 🌐 Erişim
+## 🌐 Access
 
-- **Frontend**: http://localhost:80
+- **Frontend**: http://localhost
 - **Backend API**: http://localhost:3000
 - **Health Check**: http://localhost:3000/api/health
 
 ## 🔍 Troubleshooting
 
-### Container Logları
+### Container Logs
 
 ```bash
-# Backend logları
+# Backend logs
 docker-compose logs backend
 
-# Frontend logları
+# Frontend logs
 docker-compose logs frontend
 
-# Tüm loglar
+# All logs
 docker-compose logs
 ```
 
-### Container Durumu
+### Container Status
 
 ```bash
-# Container durumlarını kontrol et
+# Check container status
 docker-compose ps
 
-# Container'ları yeniden başlat
+# Restart containers
 docker-compose restart
 ```
 
-### Environment Variables Kontrol
+### Environment Variables Check
 
 ```bash
-# Environment variables'ları kontrol et
+# Check environment variables
 docker-compose exec backend env
 docker-compose exec frontend env
 ```
 
 ## 🚀 Production Deployment
 
-### 1. Domain Ayarları
+### 1. Domain Settings
 
 ```env
 # Production environment variables
@@ -129,17 +132,17 @@ BACKEND_URL=https://api.yourdomain.com
 GOOGLE_CALLBACK_URL=https://api.yourdomain.com/api/auth/google/callback
 ```
 
-### 2. SSL Sertifikası
+### 2. SSL Certificate
 
 ```bash
-# Nginx reverse proxy ile SSL
-# Let's Encrypt sertifikası kullanın
+# Use Nginx reverse proxy with SSL
+# Use Let's Encrypt certificate
 ```
 
 ### 3. Database
 
 ```bash
-# MongoDB Atlas kullanın veya kendi MongoDB instance'ınızı kurun
+# Use MongoDB Atlas or set up your own MongoDB instance
 MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/location-notebook
 ```
 
@@ -152,13 +155,13 @@ MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/location-noteboo
 curl http://localhost:3000/api/health
 
 # Frontend health check
-curl http://localhost:80/health
+curl http://localhost/health
 ```
 
 ### Container Metrics
 
 ```bash
-# Container resource kullanımı
+# Container resource usage
 docker stats
 
 # Specific container
@@ -168,13 +171,13 @@ docker stats location-notebook-frontend
 
 ## 🔄 Updates
 
-### Uygulamayı Güncelleme
+### Updating the Application
 
 ```bash
-# Latest code'u çek
+# Pull latest code
 git pull origin main
 
-# Container'ları yeniden build et
+# Rebuild containers
 docker-compose down
 docker-compose up -d --build
 ```
@@ -190,31 +193,31 @@ docker-compose exec backend mongodump --uri="$MONGODB_URI" --out=/backup
 
 ### Environment Variables
 
-- `.env` dosyasını asla commit etmeyin
-- Production'da güçlü JWT secret kullanın
-- Google OAuth credentials'ları güvenli tutun
+- Never commit `.env` file
+- Use strong JWT secret in production
+- Keep Google OAuth credentials secure
 
 ### Container Security
 
 ```bash
-# Container'ları non-root user ile çalıştırın
-# Security updates'leri düzenli olarak uygulayın
-# Network isolation kullanın
+# Run containers with non-root user
+# Apply security updates regularly
+# Use network isolation
 ```
 
 ## 📝 Notes
 
-- Frontend Nginx ile serve edilir
-- Backend Node.js ile çalışır
-- MongoDB bağlantısı yoksa in-memory storage kullanılır
-- Cloudinary photo upload için gereklidir
-- Google OAuth authentication için gereklidir
+- Frontend is served with Nginx
+- Backend runs with Node.js
+- Uses in-memory storage if MongoDB connection fails
+- Cloudinary is required for photo uploads
+- Google OAuth is required for authentication
 
 ## 🆘 Support
 
-Sorun yaşıyorsanız:
+If you encounter issues:
 
-1. Container loglarını kontrol edin
-2. Environment variables'ları doğrulayın
-3. Network connectivity'yi test edin
-4. GitHub Issues'da sorun bildirin
+1. Check container logs
+2. Verify environment variables
+3. Test network connectivity
+4. Report issues on GitHub Issues

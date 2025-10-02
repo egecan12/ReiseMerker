@@ -43,80 +43,81 @@ A modern web application for tracking and saving your visited locations with pho
 - MongoDB connection string (optional, falls back to in-memory storage)
 - Cloudinary account for photo uploads
 
-### 1. Git Repository Setup
-\`\`\`bash
-# Initialize new git repository
-git init
-git add .
-git commit -m "Initial commit: Location Notebook app with photo upload feature"
-
-# Push to GitHub (optional)
-git remote add origin <your-repo-url>
-git branch -M main
-git push -u origin main
-\`\`\`
-
-### 2. Clone Project (if downloading from GitHub)
-\`\`\`bash
+### 1. Clone Project
+```bash
 git clone <repo-url>
 cd location-notebook
-\`\`\`
+```
 
-### 3. Environment Setup
-Create \`.env\` file in the backend directory:
-\`\`\`bash
-cd backend
-cp .env.example .env
-# Edit .env file with your MongoDB URI and Cloudinary credentials
-\`\`\`
+### 2. Environment Setup
+Create `.env` file in the root directory:
+```bash
+cp env.example .env
+# Edit .env file with your MongoDB URI, Cloudinary credentials, and Google OAuth settings
+```
 
-### 4. Backend Setup
-\`\`\`bash
+### 3. Docker Setup (Recommended)
+```bash
+# Start all services with Docker
+docker-compose up -d
+
+# Check logs
+docker-compose logs -f
+```
+
+### 4. Manual Setup (Alternative)
+```bash
+# Backend
 cd backend
 npm install
 npm run dev
-\`\`\`
-Backend will run on http://localhost:3000
 
-### 5. Frontend Setup
-\`\`\`bash
+# Frontend (in another terminal)
 cd frontend
 npm install
 ng serve
-\`\`\`
-Frontend will run on http://localhost:4200
+```
 
 ## 🔧 API Endpoints
 
+### Authentication
+- **GET** `/api/auth/google` - Google OAuth login
+- **GET** `/api/auth/google/callback` - OAuth callback
+- **GET** `/api/auth/me` - Get current user info
+- **POST** `/api/auth/logout` - Logout user
+
 ### Locations
-- **GET** \`/api/locations\` - Get all locations
-- **POST** \`/api/locations\` - Save new location
-- **DELETE** \`/api/locations/:id\` - Delete location
+- **GET** `/api/locations` - Get all locations (authenticated)
+- **POST** `/api/locations` - Save new location (authenticated)
+- **DELETE** `/api/locations/:id` - Delete location (authenticated)
 
 ### Photos
-- **POST** \`/api/locations/:id/photos\` - Upload photos to location
-- **DELETE** \`/api/locations/:locationId/photos/:photoId\` - Delete specific photo
+- **POST** `/api/locations/:id/photos` - Upload photos to location (authenticated)
+- **DELETE** `/api/locations/:locationId/photos/:photoId` - Delete specific photo (authenticated)
 
 ### System
-- **GET** \`/api/health\` - Server health check
-- **GET** \`/api/cloudinary-test\` - Cloudinary configuration test
+- **GET** `/api/health` - Server health check
+- **GET** `/api/cloudinary-test` - Cloudinary configuration test
 
 ## 📱 Usage
 
-1. **Enter Location Name**: Type a meaningful name for your location
-2. **Add Description**: Optional description for context
-3. **Select Photos**: Choose up to 5 photos to upload (optional)
-4. **Save**: Click "💾 Save Location" - location will be detected automatically
-5. **View**: Saved locations appear in the list with photos
-6. **Manage**: Click map icon to view on Google Maps, trash icon to delete
+1. **Login**: Click "Login with Google" to authenticate
+2. **Enter Location Name**: Type a meaningful name for your location
+3. **Add Description**: Optional description for context
+4. **Select Photos**: Choose up to 5 photos to upload (optional)
+5. **Save**: Click "💾 Save Location" - location will be detected automatically
+6. **View**: Saved locations appear in the list with photos
+7. **Manage**: Click map icon to view on Google Maps, trash icon to delete
 
 ## 🔒 Security
 
-- Geolocation API requires user permission
-- CORS policy for secure API access
-- Input validation and sanitization
-- Environment variables for sensitive data
-- Photo upload restrictions (size, type, count)
+- **Google OAuth**: Secure authentication with Google accounts
+- **JWT Tokens**: Secure session management
+- **CORS Policy**: Cross-origin resource sharing protection
+- **Input Validation**: Server-side validation and sanitization
+- **Environment Variables**: Sensitive data stored securely
+- **Photo Upload Restrictions**: Size, type, and count limits
+- **Geolocation API**: Requires user permission
 
 ## 🚀 Development
 
@@ -152,16 +153,32 @@ The app uses MongoDB with automatic fallback to in-memory storage. For MongoDB s
 3. The app will automatically use MongoDB when available
 
 ### Environment Variables (.env)
-\`\`\`env
-# MongoDB (optional - fallback to in-memory if not provided)
-MONGODB_URI=mongodb://localhost:27017/location-tracker
+```env
+# Database Configuration
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/location-notebook
 
-# Cloudinary (required for photo uploads)
+# Cloudinary Configuration (Required for photo uploads)
 CLOUDINARY_URL=cloudinary://api_key:api_secret@cloud_name
 
-# Server
+# Google OAuth Configuration (Required for authentication)
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+GOOGLE_CALLBACK_URL=http://localhost:3000/api/auth/google/callback
+
+# JWT Secret (Required for authentication)
+JWT_SECRET=your_super_secret_jwt_key_here
+
+# Session Secret (Required for authentication)
+SESSION_SECRET=your_super_secret_session_key_here
+
+# Server Configuration
 PORT=3000
-\`\`\`
+NODE_ENV=development
+
+# Frontend Configuration
+FRONTEND_URL=http://localhost
+BACKEND_URL=http://localhost:3000
+```
 
 ## 🎨 Customization
 

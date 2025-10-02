@@ -1,26 +1,26 @@
 # 📸 Cloudinary Photo Upload Setup
 
-Bu rehber, Location Tracking App'e fotoğraf yükleme özelliğini aktif hale getirmek için gereken adımları açıklar.
+This guide explains the steps required to enable photo upload functionality in the Location Notebook application.
 
-## 🔧 Cloudinary Hesabı Oluşturma
+## 🔧 Creating a Cloudinary Account
 
-### 1. Cloudinary'ye Kaydolun
-1. https://cloudinary.com adresine gidin
-2. **Sign Up** butonuna tıklayın
-3. Bilgilerinizi girin ve hesap oluşturun
-4. Email doğrulaması yapın
+### 1. Sign Up for Cloudinary
+1. Go to https://cloudinary.com
+2. Click **Sign Up** button
+3. Enter your information and create account
+4. Verify your email
 
-### 2. Dashboard Bilgilerini Alın
-1. Cloudinary Dashboard'a giriş yapın
-2. **Dashboard** sayfasında aşağıdaki bilgileri bulun:
-   - **Cloud Name** (örn: `dxmhc7vhk`)
-   - **API Key** (örn: `123456789012345`)
-   - **API Secret** (gizli, Show/Hide ile görülebilir)
+### 2. Get Dashboard Information
+1. Log in to Cloudinary Dashboard
+2. On the **Dashboard** page, find the following information:
+   - **Cloud Name** (e.g., `dxmhc7vhk`)
+   - **API Key** (e.g., `123456789012345`)
+   - **API Secret** (hidden, can be shown with Show/Hide)
 
-## ⚙️ Backend Konfigürasyonu
+## ⚙️ Backend Configuration
 
-### 1. .env Dosyası Oluşturun
-Backend klasöründe `.env` dosyası oluşturun:
+### 1. Create .env File
+Create a `.env` file in the backend directory:
 
 ```env
 # Server Configuration
@@ -36,38 +36,38 @@ CLOUDINARY_API_KEY=your_api_key_here
 CLOUDINARY_API_SECRET=your_api_secret_here
 
 # CORS Configuration
-FRONTEND_URL=http://localhost:4200
+FRONTEND_URL=http://localhost
 ```
 
-### 2. Cloudinary Bilgilerini Ekleyin
-Yukarıdaki dosyada `your_cloud_name_here`, `your_api_key_here` ve `your_api_secret_here` kısımlarını kendi bilgilerinizle değiştirin.
+### 2. Add Cloudinary Information
+In the above file, replace `your_cloud_name_here`, `your_api_key_here`, and `your_api_secret_here` with your own information.
 
-**Örnek:**
+**Example:**
 ```env
 CLOUDINARY_CLOUD_NAME=myapp-photos
 CLOUDINARY_API_KEY=123456789012345
 CLOUDINARY_API_SECRET=abcdef1234567890abcdef1234567890
 ```
 
-## 🚀 Özellikler
+## 🚀 Features
 
-### Fotoğraf Upload
-- **Drag & Drop**: Fotoğrafları sürükleyip bırakarak yükleyin
-- **Click to Select**: Dosya seçici ile fotoğraf seçin
-- **Multiple Upload**: Aynı anda 5 fotoğrafa kadar yükleyin
-- **Auto Resize**: Fotoğraflar otomatik olarak 800x600 max boyuta resize edilir
-- **Format Support**: JPEG, PNG, GIF, WebP formatları desteklenir
-- **Size Limit**: Her fotoğraf max 5MB olabilir
+### Photo Upload
+- **Drag & Drop**: Upload photos by dragging and dropping
+- **Click to Select**: Select photos using file picker
+- **Multiple Upload**: Upload up to 5 photos at once
+- **Auto Resize**: Photos are automatically resized to max 800x600
+- **Format Support**: JPEG, PNG, GIF, WebP formats supported
+- **Size Limit**: Each photo can be max 5MB
 
-### Fotoğraf Yönetimi
-- **Photo Gallery**: Her lokasyon için fotoğraf galerisi
-- **Full Size View**: Fotoğrafları büyük boyutta görüntüleme
-- **Delete Photos**: İstenmeyen fotoğrafları silme
-- **Auto Organization**: Fotoğraflar `location-tracker` klasörüne organize edilir
+### Photo Management
+- **Photo Gallery**: Photo gallery for each location
+- **Full Size View**: View photos in full size
+- **Delete Photos**: Delete unwanted photos
+- **Auto Organization**: Photos are organized in `location-tracker` folder
 
-## 📁 Klasör Yapısı
+## 📁 Folder Structure
 
-Cloudinary'de fotoğraflarınız şu şekilde organize edilir:
+Your photos in Cloudinary are organized as follows:
 ```
 location-tracker/
 ├── photo1_randomid.jpg
@@ -75,53 +75,53 @@ location-tracker/
 └── photo3_randomid.webp
 ```
 
-## 🔒 Güvenlik
+## 🔒 Security
 
-- **API Key**: Frontend'de gizli tutulur, sadece backend'de kullanılır
-- **File Validation**: Sadece image dosyaları kabul edilir
-- **Size Limits**: Büyük dosya yüklemesi engellenir
-- **Auto Cleanup**: Lokasyon silindiğinde fotoğraflar da Cloudinary'den silinir
+- **API Key**: Kept secret in frontend, only used in backend
+- **File Validation**: Only image files are accepted
+- **Size Limits**: Large file uploads are prevented
+- **Auto Cleanup**: Photos are deleted from Cloudinary when location is deleted
 
-## 🆓 Ücretsiz Kullanım
+## 🆓 Free Usage
 
-Cloudinary ücretsiz plan:
-- **25,000** dönüşüm/ay (resize, format değişimi vs.)
-- **25 GB** depolama
+Cloudinary free plan:
+- **25,000** transformations/month (resize, format change, etc.)
+- **25 GB** storage
 - **25 GB** bandwidth
 
-Normal kullanım için oldukça yeterli!
+More than enough for normal usage!
 
-## ❗ Önemli Notlar
+## ❗ Important Notes
 
-1. **.env** dosyasını **asla** Git'e commit etmeyin
-2. **API Secret**'ı kimseyle paylaşmayın
-3. Production'da farklı Cloudinary hesabı kullanın
-4. Backup için önemli fotoğrafları başka yerde de saklayın
+1. **Never** commit `.env` file to Git
+2. **Never** share your API Secret
+3. Use different Cloudinary account for production
+4. Keep backups of important photos elsewhere
 
-## 🔧 Test Etme
+## 🔧 Testing
 
-1. Backend'i başlatın: `cd backend && npm run dev`
-2. Frontend'i başlatın: `cd frontend && ng serve`
-3. Yeni lokasyon oluşturun
-4. Fotoğraf yükleme bölümünden test edin
+1. Start backend: `cd backend && npm run dev`
+2. Start frontend: `cd frontend && ng serve`
+3. Create new location
+4. Test from photo upload section
 
-## 📞 Sorun Giderme
+## 📞 Troubleshooting
 
-### Fotoğraf Yüklenmiyor
-- Cloudinary bilgilerini kontrol edin
-- .env dosyasının backend klasöründe olduğundan emin olun
-- Console'da hata mesajlarını kontrol edin
+### Photos Not Uploading
+- Check Cloudinary information
+- Make sure `.env` file is in backend directory
+- Check error messages in console
 
-### "Upload Failed" Hatası
-- Dosya boyutunu kontrol edin (max 5MB)
-- Dosya formatını kontrol edin (sadece resim dosyaları)
-- Internet bağlantınızı kontrol edin
+### "Upload Failed" Error
+- Check file size (max 5MB)
+- Check file format (only image files)
+- Check your internet connection
 
-### API Key Hatası
-- Dashboard'daki bilgileri tekrar kontrol edin
-- API Secret'ın doğru olduğundan emin olun
-- Serveri yeniden başlatın
+### API Key Error
+- Double-check information from dashboard
+- Make sure API Secret is correct
+- Restart server
 
 ---
 
-✅ **Setup tamamlandığında, kullanıcılarınız lokasyonlarına fotoğraf ekleyebilecek!**
+✅ **Once setup is complete, your users will be able to add photos to their locations!**
