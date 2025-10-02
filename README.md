@@ -50,10 +50,14 @@ cd location-notebook
 ```
 
 ### 2. Environment Setup
-Create `.env` file in the root directory:
 ```bash
-cp env.example .env
-# Edit .env file with your MongoDB URI, Cloudinary credentials, and Google OAuth settings
+# Backend environment
+cp backend/.env.example backend/.env
+# Edit backend/.env with your credentials
+
+# Frontend environment (for Docker deployment)
+cp frontend/.env.example frontend/.env
+# Edit frontend/.env with your backend URL
 ```
 
 ### 3. Docker Setup (Recommended)
@@ -220,7 +224,7 @@ This project is licensed under the MIT License.
 ## 🚀 Deployment
 
 ### Render Deployment (Current Setup)
-This project is configured for Render deployment:
+This project is configured for Render deployment with Docker containers.
 
 #### Backend Service (Web Service)
 - **Environment**: Docker
@@ -239,16 +243,20 @@ This project is configured for Render deployment:
   FRONTEND_URL=https://your-frontend-app.onrender.com
   ```
 
-#### Frontend Service (Static Site)
-- **Root Directory**: `frontend`
-- **Build Command**: `npm install && npm run build`
-- **Publish Directory**: `dist/frontend/browser`
+#### Frontend Service (Web Service - Docker)
+⚠️ **IMPORTANT**: Frontend MUST be deployed as Docker Web Service, NOT Static Site!
+
+- **Environment**: Docker (Web Service)
+- **Dockerfile**: `frontend/Dockerfile`
+- **Docker Context Directory**: `frontend/`
 - **Environment Variables**:
   ```env
   BACKEND_URL=https://your-backend-app.onrender.com
   ```
 
-### Google OAuth Configuration
+### 🚨 Critical OAuth Configuration Steps
+
+#### Step 1: Google Cloud Console Setup
 1. Go to [Google Cloud Console](https://console.cloud.google.com/)
 2. Select your project
 3. Go to "APIs & Services" → "Credentials"
@@ -258,10 +266,39 @@ This project is configured for Render deployment:
      - `https://your-backend-app.onrender.com`
      - `https://your-frontend-app.onrender.com`
 
+#### Step 2: Render Backend Configuration
+1. **Backend Service Environment Variables**:
+   ```env
+   GOOGLE_CALLBACK_URL=https://your-backend-app.onrender.com/api/auth/google/callback
+   FRONTEND_URL=https://your-frontend-app.onrender.com
+   ```
+
+#### Step 3: Render Frontend Configuration
+1. **Frontend Service MUST be Docker Web Service**:
+   - Environment: `Docker` (Web Service)
+   - Dockerfile Path: `frontend/Dockerfile`
+   - Docker Context Directory: `frontend/`
+   
+2. **Frontend Environment Variables**:
+   ```env
+   BACKEND_URL=https://your-backend-app.onrender.com
+   ```
+
+#### Step 4: Deploy Order
+1. Deploy backend service first
+2. Deploy frontend service second
+3. Test OAuth login
+
+### 🔧 Why Docker for Frontend?
+
+The frontend uses `docker-entrypoint.sh` to replace `localhost:3000` URLs with the actual backend URL at runtime. This is essential for OAuth to work correctly.
+
+**If you deploy frontend as Static Site**: OAuth will fail with `redirect_uri_mismatch` error because it will try to redirect to `localhost:3000`.
+
 ### Local Development
 ```bash
 # Copy environment file
-cp env.example .env
+cp backend/.env.example backend/.env
 
 # Start with Docker
 docker-compose up -d
