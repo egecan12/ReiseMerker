@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost',
+  origin: process.env.FRONTEND_URL,
   credentials: true
 }));
 app.use(express.json());
@@ -147,10 +147,10 @@ app.get('/api/auth/google', (req, res, next) => {
 });
 
 app.get('/api/auth/google/callback', 
-  passport.authenticate('google', { failureRedirect: `${process.env.FRONTEND_URL || 'http://localhost'}/login` }),
+  passport.authenticate('google', { failureRedirect: `${process.env.FRONTEND_URL}/login` }),
   (req, res) => {
     const token = generateToken(req.user);
-    const redirectUrl = `${process.env.FRONTEND_URL || 'http://localhost'}/auth-success?token=${token}`;
+    const redirectUrl = `${process.env.FRONTEND_URL}/auth-success?token=${token}`;
     res.redirect(redirectUrl);
   }
 );

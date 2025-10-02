@@ -13,9 +13,9 @@ services:
       - CLOUDINARY_URL=${CLOUDINARY_URL}
       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
       - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
-      - GOOGLE_CALLBACK_URL=${GOOGLE_CALLBACK_URL:-http://localhost:3000/api/auth/google/callback}
+      - GOOGLE_CALLBACK_URL=${GOOGLE_CALLBACK_URL}
       - JWT_SECRET=${JWT_SECRET}
-      - FRONTEND_URL=${FRONTEND_URL:-http://localhost}
+      - FRONTEND_URL=${FRONTEND_URL}
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "node", "healthcheck.js"]
