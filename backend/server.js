@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors({
-  origin: 'http://localhost:4200', // Angular dev server
+  origin: process.env.FRONTEND_URL || 'http://localhost:80',
   credentials: true
 }));
 app.use(express.json());
@@ -132,13 +132,15 @@ app.get('/api/auth/google', (req, res, next) => {
 });
 
 app.get('/api/auth/google/callback', 
-  passport.authenticate('google', { failureRedirect: 'http://localhost:4200/login' }),
+  passport.authenticate('google', { failureRedirect: `${process.env.FRONTEND_URL || 'http://localhost:80'}/login` }),
   (req, res) => {
     // Generate JWT token
     const token = generateToken(req.user);
     
     // Redirect to frontend with token
-    const redirectUrl = `http://localhost:4200/auth-success?token=${token}`;
+    const redirectUrl = `${process.env.FRONTEND_URL || 'http://localhost:80'}/auth-success?token=${token}`;
+    console.log('🔐 OAuth Callback - FRONTEND_URL:', process.env.FRONTEND_URL);
+    console.log('🔐 OAuth Callback - Redirect URL:', redirectUrl);
     res.redirect(redirectUrl);
   }
 );
