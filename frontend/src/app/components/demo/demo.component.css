@@ -99,33 +99,75 @@
   margin: 20px 0 30px 0;
 }
 
-.github-text {
-  font-size: 16px;
-  color: var(--secondary-gray);
-  margin: 0;
+.github-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(135deg, #24292e 0%, #1a1e22 100%);
+  color: white;
+  padding: 16px 24px;
+  border-radius: 16px;
+  box-shadow: 0 8px 25px rgba(36, 41, 46, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+  text-decoration: none;
   font-family: var(--sf-pro-text);
-  line-height: 1.4;
+}
+
+.github-badge:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 35px rgba(36, 41, 46, 0.4);
+  background: linear-gradient(135deg, #2d3339 0%, #21262d 100%);
 }
 
 .github-icon {
-  margin-right: 8px;
-  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.github-icon svg {
+  color: white;
+  transition: transform 0.3s ease;
+}
+
+.github-badge:hover .github-icon svg {
+  transform: scale(1.1);
+}
+
+.github-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.github-label {
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+  line-height: 1.2;
 }
 
 .github-link {
-  color: var(--blue);
+  font-size: 14px;
+  color: #58a6ff;
   text-decoration: none;
-  font-weight: 600;
+  font-weight: 500;
   transition: color 0.3s ease;
 }
 
 .github-link:hover {
-  color: var(--blue-hover);
+  color: #79c0ff;
   text-decoration: underline;
 }
 
 .demo-signin-btn {
-  background: var(--gradient-primary);
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%); /* Yeşil gradient */
   color: var(--background-white);
   border: none;
   padding: 20px 40px;
@@ -137,13 +179,13 @@
   font-family: var(--sf-pro-text);
   min-width: 200px;
   min-height: 60px;
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3); /* Yeşil gölge */
   margin: 0 auto;
 }
 
 .demo-signin-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 12px 35px rgba(40, 167, 69, 0.4); /* Yeşil hover gölgesi */
 }
 
 .demo-signin-btn:active {
