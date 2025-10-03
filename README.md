@@ -2,6 +2,11 @@
 
 A modern web application for tracking and saving your visited locations with photos. Built with Angular frontend and Node.js backend.
 
+
+https://github.com/user-attachments/assets/e930aa91-d54d-473a-b2af-3c302018679e
+
+<img width="2109" height="1212" alt="Macbook-Air-reisemerker-client-93ff onrender com" src="https://github.com/user-attachments/assets/a0274c8b-3d20-42ce-aa4a-4d28058c8ad7" />
+
 ## 🚀 Features
 
 - **📍 Automatic Location Detection**: Uses browser's Geolocation API to get your current position
