@@ -75,6 +75,19 @@
         </div>
 
         <div class="card-body">
+          <!-- Koordinat Bilgileri -->
+          <div class="location-info">
+            <div class="info-item">
+              <strong>Latitude:</strong> {{ formatCoordinate(location.latitude) }}
+            </div>
+            <div class="info-item">
+              <strong>Longitude:</strong> {{ formatCoordinate(location.longitude) }}
+            </div>
+            <div class="info-item">
+              <strong>Added:</strong> {{ formatDate(location.timestamp) }}
+            </div>
+          </div>
+          
           <!-- Description -->
           <div *ngIf="location.description" class="description">
             <p>{{ location.description }}</p>

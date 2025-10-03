@@ -89,22 +89,6 @@ export class LocationListComponent implements OnInit, OnDestroy {
   }
 
 
-  // Format date
-  formatDate(date: Date | string | undefined): string {
-    if (!date) return 'Date not specified';
-    
-    const dateObj = typeof date === 'string' ? new Date(date) : date;
-    
-    if (isNaN(dateObj.getTime())) return 'Invalid date';
-    
-    return new Intl.DateTimeFormat('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    }).format(dateObj);
-  }
 
   // Format coordinates
   formatCoordinate(coord: number): string {
@@ -200,6 +184,23 @@ export class LocationListComponent implements OnInit, OnDestroy {
     
     // Reload locations to get fresh data
     this.loadLocations();
+  }
+
+  // Format date for display
+  formatDate(timestamp: string | Date | undefined): string {
+    if (!timestamp) return 'Date not specified';
+    
+    const date = new Date(timestamp);
+    if (isNaN(date.getTime())) return 'Invalid date';
+    
+    return date.toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    });
   }
 
 }
