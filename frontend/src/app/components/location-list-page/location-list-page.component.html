@@ -1,9 +1,4 @@
 <div class="location-list-page">
-  <div class="page-header">
-    <h2>📍 My Locations</h2>
-    <p>Manage your saved locations and photos</p>
-  </div>
-
   <div class="locations-container" *ngIf="!isLoading; else loadingTemplate">
     <div class="locations-grid" *ngIf="locations.length > 0; else emptyTemplate">
       <div class="location-card" *ngFor="let location of locations; trackBy: trackByLocation">
