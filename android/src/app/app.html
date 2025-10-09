@@ -1,0 +1,29 @@
+<div class="app-container">
+  <header class="app-header">
+    <div class="container">
+      <div class="header-content">
+        <div class="app-info">
+          <h1 class="app-title">{{ title }}</h1>
+          <p class="app-subtitle">Save and track the places you visit</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="app-main">
+    <div class="container">
+      <!-- Navigation -->
+      <nav class="app-nav">
+        <button class="nav-btn" [class.active]="currentRoute === '/list'" (click)="navigateTo('/list')">
+          📍 My Locations
+        </button>
+        <button class="nav-btn" [class.active]="currentRoute === '/tracker'" (click)="navigateTo('/tracker')">
+          ➕ Add Location
+        </button>
+      </nav>
+
+      <!-- Router Outlet -->
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>

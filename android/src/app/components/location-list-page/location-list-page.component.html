@@ -1,0 +1,90 @@
+<div class="location-list-page">
+  <div class="locations-container" *ngIf="!isLoading; else loadingTemplate">
+    <div class="locations-grid" *ngIf="locations.length > 0; else emptyTemplate">
+      <div class="location-card" *ngFor="let location of locations; trackBy: trackByLocation">
+        <div class="location-header">
+          <h3 class="location-name">{{ location.name }}</h3>
+          <div class="location-actions">
+            <button class="btn-icon" (click)="openInMaps(location)" title="Open in Maps">
+              🗺️
+            </button>
+            <button class="btn-icon btn-delete" (click)="deleteLocation(location)" title="Delete Location">
+              🗑️
+            </button>
+          </div>
+        </div>
+        
+        <div class="location-details">
+          <div class="coordinate">
+            <strong>Latitude:</strong> {{ formatCoordinate(location.latitude) }}
+          </div>
+          <div class="coordinate">
+            <strong>Longitude:</strong> {{ formatCoordinate(location.longitude) }}
+          </div>
+          <div class="timestamp">
+            <strong>Added:</strong> {{ formatDate(location.timestamp) }}
+          </div>
+          <div class="distance" *ngIf="locationDistance[location.id || location._id!]">
+            <strong>Distance:</strong> {{ locationDistance[location.id || location._id!] }}
+          </div>
+        </div>
+
+        <div class="location-description" *ngIf="location.description">
+          <p>{{ location.description }}</p>
+        </div>
+
+        <div class="photos-section" *ngIf="location.photos && location.photos.length > 0">
+          <h4>📸 Photos ({{ location.photos.length }})</h4>
+          <div class="photos-grid">
+            <div class="photo-item" *ngFor="let photo of location.photos; trackBy: trackByPhoto">
+              <img [src]="photo.url" [alt]="photo.originalName" (click)="openPhotoModal(photo)">
+              <div class="photo-info">
+                <span class="photo-name">{{ photo.originalName }}</span>
+                <button class="btn-icon btn-delete" (click)="deletePhoto(location, photo)" title="Delete Photo">
+                  🗑️
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <ng-template #emptyTemplate>
+      <div class="empty-state">
+        <div class="empty-icon">📍</div>
+        <h3>No locations yet</h3>
+        <p>Start by adding your first location!</p>
+        <button class="btn-primary" (click)="navigateToTracker()">
+          Add Location
+        </button>
+      </div>
+    </ng-template>
+  </div>
+
+  <!-- Loading State -->
+  <ng-template #loadingTemplate>
+    <div class="loading-state">
+      <div class="loading-spinner"></div>
+      <p>Loading locations...</p>
+    </div>
+  </ng-template>
+
+  <!-- Message Display -->
+  <div class="message" *ngIf="message" [ngClass]="'message-' + messageType">
+    {{ message }}
+  </div>
+
+  <!-- Photo Modal -->
+  <div class="modal-overlay" *ngIf="selectedPhoto" (click)="closePhotoModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <button class="modal-close" (click)="closePhotoModal()">×</button>
+      <img [src]="selectedPhoto.url" [alt]="selectedPhoto.originalName" class="modal-image">
+      <div class="modal-info">
+        <h3>{{ selectedPhoto.originalName }}</h3>
+        <p>Uploaded: {{ formatDate(selectedPhoto.uploadedAt) }}</p>
+      </div>
+    </div>
+  </div>
+</div>

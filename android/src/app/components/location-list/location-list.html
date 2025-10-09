@@ -1,0 +1,122 @@
+<div class="location-list">
+
+  <!-- Message area -->
+  <div *ngIf="message" class="message" [ngClass]="messageType" (click)="clearMessage()">
+    {{ message }}
+    <span class="close-btn">×</span>
+  </div>
+
+  <!-- Loading indicator -->
+  <div *ngIf="isLoading" class="loading">
+    <div class="spinner"></div>
+    <p>Loading locations...</p>
+  </div>
+
+  <!-- Location list -->
+  <div *ngIf="!isLoading" class="locations-container">
+    <!-- Empty list state -->
+    <div *ngIf="locations.length === 0" class="empty-state">
+      <div class="empty-icon">📍</div>
+      <h3>No locations saved yet</h3>
+      <p>Use the form above to start saving your locations.</p>
+    </div>
+
+    <!-- Location cards -->
+    <div *ngIf="locations.length > 0" class="locations-grid">
+      <div *ngFor="let location of locations; trackBy: trackByLocation" class="location-card">
+        <div class="card-header">
+          <h3 class="location-name">{{ location.name }}</h3>
+          <div class="card-actions">
+            <button 
+              class="btn-icon btn-delete" 
+              (click)="deleteLocation(location)"
+              title="Delete">
+              🗑️
+            </button>
+          </div>
+        </div>
+
+        <!-- Photo Preview -->
+        <div class="photo-preview" *ngIf="location.photos && location.photos.length > 0">
+          <img 
+            [src]="location.photos[0].url" 
+            [alt]="location.name"
+            class="preview-image"
+            loading="lazy">
+          <div class="photo-count" *ngIf="location.photos.length > 1">
+            <span>+{{ location.photos.length - 1 }}</span>
+          </div>
+          
+          <!-- Simple Action Buttons -->
+          <div class="photo-actions">
+            <button 
+              class="photo-action-btn delete-btn"
+              (click)="deletePhoto(location, location.photos[0])"
+              title="Delete photo">
+              🗑️
+            </button>
+            <button 
+              class="photo-action-btn view-btn"
+              (click)="viewPhoto(location.photos[0])"
+              title="View full size">
+              👁️
+            </button>
+          </div>
+        </div>
+
+        <!-- Placeholder when no photos -->
+        <div class="photo-placeholder" *ngIf="!location.photos || location.photos.length === 0">
+          <div class="placeholder-content">
+            <div class="placeholder-icon">📍</div>
+            <div class="placeholder-coordinates">
+              <span>{{ formatCoordinate(location.latitude) }}, {{ formatCoordinate(location.longitude) }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <!-- Koordinat Bilgileri -->
+          <div class="location-info">
+            <div class="info-item">
+              <strong>Latitude:</strong> {{ formatCoordinate(location.latitude) }}
+            </div>
+            <div class="info-item">
+              <strong>Longitude:</strong> {{ formatCoordinate(location.longitude) }}
+            </div>
+            <div class="info-item">
+              <strong>Added:</strong> {{ formatDate(location.timestamp) }}
+            </div>
+          </div>
+          
+          <!-- Description -->
+          <div *ngIf="location.description" class="description">
+            <p>{{ location.description }}</p>
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <button 
+            class="btn btn-outline btn-small"
+            (click)="openInMaps(location)">
+            🗺️ Show on Map
+          </button>
+        </div>
+
+        <!-- Photo Upload Section -->
+        <div class="photo-upload-section">
+          <app-photo-upload
+            [location]="location"
+            (photosUploaded)="onPhotosUploaded($event)"
+            (photoDeleted)="onPhotoDeleted($event)">
+          </app-photo-upload>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Counter -->
+    <div *ngIf="locations.length > 0" class="location-count">
+      <p>Total {{ locations.length }} locations saved</p>
+    </div>
+  </div>
+</div>
