@@ -11,7 +11,7 @@ import { Subscription, filter } from 'rxjs';
   styleUrl: './app.css'
 })
 export class App implements OnInit, OnDestroy {
-  title = 'Location Notebook Android';
+  title = 'Location Notebook';
   currentRoute = '';
   private subscription = new Subscription();
 
