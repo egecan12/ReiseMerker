@@ -1,8 +1,8 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.locationnotebook.android',
-  appName: 'Location Notebook',
+  appId: 'com.locationdiary.android',
+  appName: 'LocationDiary',
   webDir: 'dist/frontend/browser',
   server: {
     androidScheme: 'https'

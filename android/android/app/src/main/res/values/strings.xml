@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Location Notebook</string>
-    <string name="title_activity_main">Location Notebook</string>
-    <string name="package_name">com.locationnotebook.android</string>
-    <string name="custom_url_scheme">com.locationnotebook.android</string>
+    <string name="app_name">LocationDiary</string>
+    <string name="title_activity_main">LocationDiary</string>
+    <string name="package_name">com.locationdiary.android</string>
+    <string name="custom_url_scheme">com.locationdiary.android</string>
 </resources>

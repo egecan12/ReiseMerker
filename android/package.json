@@ -1,8 +1,8 @@
 {
-  "name": "location-notebook-android",
-  "id": "com.locationnotebook.android",
+  "name": "location-diary-android",
+  "id": "com.locationdiary.android",
   "version": "1.0.0",
-  "description": "Location Notebook Android App - Offline location tracking with photos",
+  "description": "LocationDiary Android App - Offline location tracking with photos",
   "main": "index.js",
   "scripts": {
     "ng": "ng",
@@ -41,6 +41,7 @@
     "@angular/router": "^20.3.0",
     "@capacitor/android": "^6.0.0",
     "@capacitor/app": "^6.0.0",
+    "@capacitor/assets": "^3.0.5",
     "@capacitor/camera": "^6.0.0",
     "@capacitor/core": "^6.0.0",
     "@capacitor/filesystem": "^6.0.0",

@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# Location Notebook Android Build Script
+# LocationDiary Android Build Script
 # Bu script Android uygulamasını derler ve hazırlar
 
-echo "🚀 Location Notebook Android Build Script"
-echo "========================================"
+echo "🚀 LocationDiary Android Build Script"
+echo "====================================="
 
 # Renkli çıktı için
 RED='\033[0;31m'

@@ -1,4 +1,4 @@
-# Location Notebook Android App
+# LocationDiary Android App
 
 Bu uygulama, konumları ve fotoğrafları telefonunuzda saklayan offline bir Android uygulamasıdır. Backend sunucusu gerektirmez ve tüm veriler telefonunuzda güvenle saklanır.
 

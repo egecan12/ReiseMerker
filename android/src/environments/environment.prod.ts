@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  appName: 'Location Notebook Android',
+  appName: 'LocationDiary',
   version: '1.0.0',
   isOffline: true
 };
