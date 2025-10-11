@@ -165,6 +165,91 @@ export class LocationTrackerComponent {
     }
   }
 
+  // Take photo with camera
+  takePhoto(): void {
+    // Create a hidden file input for camera capture
+    const cameraInput = document.createElement('input');
+    cameraInput.type = 'file';
+    cameraInput.accept = 'image/*';
+    cameraInput.capture = 'environment'; // Use back camera on mobile
+    cameraInput.style.display = 'none';
+    
+    // Add to DOM temporarily
+    document.body.appendChild(cameraInput);
+    
+    // Trigger camera
+    cameraInput.click();
+    
+    // Handle the result
+    cameraInput.addEventListener('change', (event: any) => {
+      const files = event.target.files;
+      if (files && files.length > 0) {
+        // Check if we already have files selected
+        const currentCount = this.selectedFiles ? this.selectedFiles.length : 0;
+        const newCount = files.length;
+        
+        if (currentCount + newCount > 5) {
+          this.message = 'Maximum 5 photos allowed. Please remove some photos first.';
+          this.messageType = 'error';
+          document.body.removeChild(cameraInput);
+          return;
+        }
+        
+        // Validate the captured photo
+        const file = files[0];
+        if (!file.type.startsWith('image/')) {
+          this.message = 'Captured file is not a valid image';
+          this.messageType = 'error';
+          document.body.removeChild(cameraInput);
+          return;
+        }
+        
+        if (file.size > 5 * 1024 * 1024) { // 5MB
+          this.message = 'Captured photo is too large. Max size is 5MB';
+          this.messageType = 'error';
+          document.body.removeChild(cameraInput);
+          return;
+        }
+        
+        // Merge with existing files or set new files
+        if (this.selectedFiles && this.selectedFiles.length > 0) {
+          // Create a new FileList with existing and new files
+          const dt = new DataTransfer();
+          
+          // Add existing files
+          for (let i = 0; i < this.selectedFiles.length; i++) {
+            dt.items.add(this.selectedFiles[i]);
+          }
+          
+          // Add new captured photo
+          dt.items.add(file);
+          
+          this.selectedFiles = dt.files;
+          this.message = `${this.selectedFiles.length} photo(s) selected (including captured photo)`;
+        } else {
+          this.selectedFiles = files;
+          this.message = 'Photo captured successfully';
+        }
+        
+        this.messageType = 'success';
+        
+        // Update the visible file input to show the new selection
+        const visibleInput = document.getElementById('photoInput') as HTMLInputElement;
+        if (visibleInput) {
+          visibleInput.files = this.selectedFiles;
+        }
+      }
+      
+      // Clean up
+      document.body.removeChild(cameraInput);
+    });
+    
+    // Clean up if user cancels
+    cameraInput.addEventListener('cancel', () => {
+      document.body.removeChild(cameraInput);
+    });
+  }
+
   // Upload photos after location is saved
   private uploadPhotos(): void {
     if (!this.selectedFiles || !this.savedLocationId) {

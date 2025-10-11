@@ -59,14 +59,24 @@
         <!-- Photo Selection -->
         <div class="form-group">
           <label for="photoInput">📸 Add Photos (Optional)</label>
-          <input 
-            type="file" 
-            id="photoInput"
-            accept="image/*" 
-            multiple 
-            (change)="onFileSelect($event)"
-            [disabled]="isLoading"
-            class="file-input">
+          <div class="photo-input-container">
+            <input 
+              type="file" 
+              id="photoInput"
+              accept="image/*" 
+              multiple 
+              (change)="onFileSelect($event)"
+              [disabled]="isLoading"
+              class="file-input">
+            <button 
+              type="button"
+              class="btn btn-outline btn-camera"
+              (click)="takePhoto()"
+              [disabled]="isLoading"
+              title="Take a photo with camera">
+              📷 Take Photo
+            </button>
+          </div>
           <div class="file-input-info" *ngIf="selectedFiles">
             <small>{{ selectedFiles.length }} photo(s) selected: {{ getSelectedFileNames() }}</small>
           </div>

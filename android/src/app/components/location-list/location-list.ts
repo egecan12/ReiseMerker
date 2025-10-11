@@ -1,12 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LocationService, LocationData, PhotoData } from '../../services/location';
-import { PhotoUploadComponent } from '../photo-upload/photo-upload';
 import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-location-list',
-  imports: [CommonModule, PhotoUploadComponent],
+  imports: [CommonModule],
   templateUrl: './location-list.html',
   styleUrl: './location-list.css'
 })
@@ -166,25 +165,6 @@ export class LocationListComponent implements OnInit, OnDestroy {
     window.open(photo.url, '_blank');
   }
 
-  // Handle photos uploaded
-  onPhotosUploaded(newPhotos: PhotoData[]): void {
-    console.log('Photos uploaded event received:', newPhotos);
-    this.message = `${newPhotos.length} photo(s) added successfully`;
-    this.messageType = 'success';
-    
-    // Reload locations to get fresh data
-    this.loadLocations();
-  }
-
-  // Handle photo deleted
-  onPhotoDeleted(photoId: string): void {
-    console.log('Photo deleted event received:', photoId);
-    this.message = 'Photo deleted successfully';
-    this.messageType = 'success';
-    
-    // Reload locations to get fresh data
-    this.loadLocations();
-  }
 
   // Format date for display
   formatDate(timestamp: string | Date | undefined): string {
