@@ -15,11 +15,8 @@
         </div>
         
         <div class="location-details">
-          <div class="coordinate">
-            <strong>Latitude:</strong> {{ formatCoordinate(location.latitude) }}
-          </div>
-          <div class="coordinate">
-            <strong>Longitude:</strong> {{ formatCoordinate(location.longitude) }}
+          <div class="address" *ngIf="location.address">
+            <strong>Address:</strong> {{ location.address }}
           </div>
           <div class="timestamp">
             <strong>Added:</strong> {{ formatDate(location.timestamp) }}

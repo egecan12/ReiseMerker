@@ -16,6 +16,7 @@ export class LocationTrackerComponent {
   locationName: string = '';
   description: string = '';
   currentPosition: GeolocationPosition | null = null;
+  currentAddress: string = '';
   isLoading: boolean = false;
   message: string = '';
   messageType: 'success' | 'error' | 'info' = 'info';
@@ -46,6 +47,12 @@ export class LocationTrackerComponent {
     try {
       // First, get current location automatically
       this.currentPosition = await this.locationService.getCurrentPosition();
+      
+      // Get address from coordinates
+      this.currentAddress = await this.locationService.getAddressFromCoordinates(
+        this.currentPosition.latitude, 
+        this.currentPosition.longitude
+      );
       
       console.log('✅ Location retrieved, now saving...', this.currentPosition);
       

@@ -133,16 +133,16 @@
   margin-bottom: 15px;
 }
 
-.coordinate, .timestamp, .distance {
+.coordinate, .timestamp, .distance, .address {
   margin-bottom: 8px;
   font-size: 0.9rem;
-  color: #2c3e50;
+  color: #000000 !important;
   font-family: 'Courier New', monospace;
   font-weight: 600;
 }
 
-.coordinate strong, .timestamp strong, .distance strong {
-  color: #34495e;
+.coordinate strong, .timestamp strong, .distance strong, .address strong {
+  color: #000000 !important;
   margin-right: 8px;
   font-weight: 700;
 }

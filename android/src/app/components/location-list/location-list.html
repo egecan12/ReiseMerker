@@ -68,20 +68,17 @@
         <div class="photo-placeholder" *ngIf="!location.photos || location.photos.length === 0">
           <div class="placeholder-content">
             <div class="placeholder-icon">📍</div>
-            <div class="placeholder-coordinates">
-              <span>{{ formatCoordinate(location.latitude) }}, {{ formatCoordinate(location.longitude) }}</span>
+            <div class="placeholder-address">
+              <span>{{ location.address || 'Address loading...' }}</span>
             </div>
           </div>
         </div>
 
         <div class="card-body">
-          <!-- Koordinat Bilgileri -->
+          <!-- Adres Bilgileri -->
           <div class="location-info">
             <div class="info-item">
-              <strong>Latitude:</strong> {{ formatCoordinate(location.latitude) }}
-            </div>
-            <div class="info-item">
-              <strong>Longitude:</strong> {{ formatCoordinate(location.longitude) }}
+              <strong>Address:</strong> {{ location.address || 'Address not available' }}
             </div>
             <div class="info-item">
               <strong>Added:</strong> {{ formatDate(location.timestamp) }}
@@ -98,7 +95,7 @@
           <button 
             class="btn btn-outline btn-small"
             (click)="openInMaps(location)">
-            🗺️ Show on Map
+            🗺️ Show on Map 
           </button>
         </div>
 

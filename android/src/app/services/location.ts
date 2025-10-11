@@ -28,6 +28,11 @@ export class LocationService {
     return this.androidLocationService.getCurrentPosition();
   }
 
+  // Get address from coordinates
+  getAddressFromCoordinates(latitude: number, longitude: number): Promise<string> {
+    return this.androidLocationService.getAddressFromCoordinates(latitude, longitude);
+  }
+
   // Load all locations from Android service
   loadLocations(): void {
     this.androidLocationService.locations$.subscribe(locations => {

@@ -23,6 +23,7 @@ export interface LocationData {
   description?: string;
   timestamp: Date;
   photos: PhotoData[];
+  address?: string; // Add address field
 }
 
 @Injectable({
@@ -35,6 +36,8 @@ export class AndroidLocationService {
 
   constructor() {
     this.loadLocations();
+    // Clear all data to start fresh
+    this.clearAllData();
   }
 
   // Load locations from local storage
@@ -48,13 +51,25 @@ export class AndroidLocationService {
       
       if (storedData.data) {
         const locations: LocationData[] = JSON.parse(storedData.data as string);
-        // Convert date strings back to Date objects
-        locations.forEach(location => {
+        // Convert date strings back to Date objects and add missing address field
+        locations.forEach(async (location) => {
           location.timestamp = new Date(location.timestamp);
           location.photos.forEach(photo => {
             photo.uploadedAt = new Date(photo.uploadedAt);
           });
+          
+          // Add address if missing
+          if (!location.address) {
+            try {
+              location.address = await this.getAddressFromCoordinates(location.latitude, location.longitude);
+            } catch (error) {
+              location.address = `${location.latitude.toFixed(6)}, ${location.longitude.toFixed(6)}`;
+            }
+          }
         });
+        
+        // Save updated locations with addresses
+        await this.saveLocations(locations);
         this.locationsSubject.next(locations);
       }
     } catch (error) {
@@ -110,13 +125,98 @@ export class AndroidLocationService {
     }
   }
 
+  // Reverse geocoding to get address from coordinates
+  async getAddressFromCoordinates(latitude: number, longitude: number): Promise<string> {
+    try {
+      console.log('🌍 Getting address for:', latitude, longitude);
+      
+      // Try multiple geocoding services
+      const services = [
+        // Service 1: BigDataCloud
+        `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=tr`,
+        // Service 2: OpenStreetMap Nominatim
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&accept-language=tr`,
+        // Service 3: Google Geocoding (free tier)
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&language=tr&key=`
+      ];
+
+      for (let i = 0; i < services.length; i++) {
+        try {
+          console.log(`📡 Trying service ${i + 1}:`, services[i]);
+          
+          const response = await fetch(services[i], {
+            headers: {
+              'User-Agent': 'LocationNotebook/1.0'
+            }
+          });
+          
+          console.log('📡 Response status:', response.status);
+          
+          if (!response.ok) {
+            console.log(`❌ Service ${i + 1} failed:`, response.status);
+            continue;
+          }
+          
+          const data = await response.json();
+          console.log('📍 Response data:', data);
+          
+          let address = '';
+          
+          if (i === 0) { // BigDataCloud
+            if (data.streetNumber && data.streetName) {
+              address = `${data.streetName} ${data.streetNumber}`;
+            } else if (data.streetName) {
+              address = data.streetName;
+            } else if (data.locality) {
+              address = data.locality;
+            }
+            
+            if (data.city && address !== data.city) {
+              address += `, ${data.city}`;
+            }
+          } else if (i === 1) { // OpenStreetMap
+            if (data.display_name) {
+              const parts = data.display_name.split(',');
+              address = parts.slice(0, 3).join(', '); // Take first 3 parts
+            }
+          } else if (i === 2) { // Google
+            if (data.results && data.results.length > 0) {
+              address = data.results[0].formatted_address;
+            }
+          }
+          
+          if (address && address.trim() !== '') {
+            console.log('✅ Address found:', address);
+            return address;
+          }
+          
+        } catch (error) {
+          console.log(`❌ Service ${i + 1} error:`, error);
+          continue;
+        }
+      }
+      
+      // If all services fail, return empty string
+      console.log('❌ All geocoding services failed, returning empty address');
+      return '';
+      
+    } catch (error) {
+      console.error('❌ Error getting address:', error);
+      return '';
+    }
+  }
+
   // Add new location
   async addLocation(location: Omit<LocationData, 'id' | 'timestamp' | 'photos'>): Promise<LocationData> {
+    // Get address from coordinates
+    const address = await this.getAddressFromCoordinates(location.latitude, location.longitude);
+    
     const newLocation: LocationData = {
       ...location,
       id: this.generateId(),
       timestamp: new Date(),
-      photos: []
+      photos: [],
+      address: address
     };
 
     const currentLocations = this.locationsSubject.value;
@@ -294,19 +394,6 @@ export class AndroidLocationService {
     return Date.now().toString(36) + Math.random().toString(36).substr(2);
   }
 
-  // Clear all data
-  async clearAllData(): Promise<void> {
-    try {
-      await Filesystem.deleteFile({
-        path: `${this.STORAGE_KEY}.json`,
-        directory: Directory.Data
-      });
-      this.locationsSubject.next([]);
-    } catch (error) {
-      console.error('Error clearing data:', error);
-    }
-  }
-
   // Export data as JSON
   exportData(): string {
     return JSON.stringify(this.locationsSubject.value, null, 2);
@@ -358,5 +445,19 @@ export class AndroidLocationService {
   // Generate Google Maps URL
   getGoogleMapsUrl(latitude: number, longitude: number): string {
     return `https://maps.google.com/?q=${latitude},${longitude}`;
+  }
+
+  // Clear all data (for testing)
+  async clearAllData(): Promise<void> {
+    try {
+      await Filesystem.deleteFile({
+        path: `${this.STORAGE_KEY}.json`,
+        directory: Directory.Data
+      });
+      this.locationsSubject.next([]);
+      console.log('🗑️ All data cleared');
+    } catch (error) {
+      console.log('No data to clear');
+    }
   }
 }
